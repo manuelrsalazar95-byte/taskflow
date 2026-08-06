@@ -12,9 +12,25 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', function () {
-    return view('welcome');
+    $personas = [
+        [
+            'nombre' => "León XIV",
+            'edad' => 57,
+            'rol' => "Papa"
+        ],
+        [
+            'nombre' => "Francisco I",
+            'edad' => 87,
+            'rol' => "Papa"
+        ],
+        [
+            'nombre' => "Juan Pablo II",
+            'edad' => 84,
+            'rol' => "Papa"
+        ]
+    ];
+    return view('welcome', compact('personas'));
 });
 
 Route::get('/about', function () {
