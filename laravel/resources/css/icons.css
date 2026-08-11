@@ -1,0 +1,37 @@
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+/*
+    display: inline-block;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    visibility: hidden; */
+}
+
+html.icons-ready .material-symbols-outlined {
+    visibility: visible;
+}
+
+.icon-bold {
+    font-variation-settings: 'wght' 700;
+}
+
+.icon-semibold {
+    font-variation-settings: 'wght' 500;
+}
+
+.icon-medium {
+    font-variation-settings: 'wght' 300;
+}
+
+.icon-normal {
+    font-variation-settings: 'wght' 200;
+}
+
+.icon-light {
+    font-variation-settings: 'wght' 100;
+}
