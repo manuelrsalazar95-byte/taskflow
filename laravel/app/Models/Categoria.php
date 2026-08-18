@@ -12,4 +12,9 @@ class Categoria extends Model
     protected $table = 'categoria';
     protected $primaryKey = 'id';
     protected $fillable = ['name'];
+
+    public function tareas()
+    {
+        return $this->hasMany(Tareas::class, 'categoria_id');
+    }
 }

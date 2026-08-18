@@ -67,8 +67,7 @@
            bg-white
            border-b
            border-gray-200
-           z-40"
->
+           z-40">
 
     <div class="h-full px-6 flex items-center justify-between">
 
@@ -84,24 +83,14 @@
                        rounded-lg
                        text-gray-500
                        hover:bg-gray-100
-                       transition"
-            >
+                       transition">
 
                 {{-- SVG --}}
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <line x1="4" y1="6" x2="20" y2="6"/>
-                    <line x1="4" y1="12" x2="20" y2="12"/>
-                    <line x1="4" y1="18" x2="20" y2="18"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                    <line x1="4" y1="18" x2="20" y2="18" />
                 </svg>
 
             </button>
@@ -110,23 +99,14 @@
             {{-- BUSCADOR --}}
             <div class="relative hidden sm:block">
 
-                <svg
-                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    width="19"
-                    height="19"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <circle cx="11" cy="11" r="7"/>
-                    <path d="m20 20-4-4"/>
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="19" height="19"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-4-4" />
                 </svg>
 
 
-                <input
-                    type="text"
-                    placeholder="Search or type command..."
+                <input type="text" placeholder="Search or type command..."
                     class="w-[320px]
                            h-10
                            rounded-lg
@@ -140,8 +120,7 @@
                            outline-none
                            focus:border-blue-500
                            focus:ring-2
-                           focus:ring-blue-100"
-                >
+                           focus:ring-blue-100">
 
 
                 <div
@@ -149,8 +128,7 @@
                            right-2
                            top-1/2
                            -translate-y-1/2
-                           flex gap-1"
-                >
+                           flex gap-1">
 
                     <span
                         class="text-[10px]
@@ -159,8 +137,7 @@
                                border-gray-200
                                rounded
                                px-1.5
-                               py-0.5"
-                    >
+                               py-0.5">
                         ⌘
                     </span>
 
@@ -171,8 +148,7 @@
                                border-gray-200
                                rounded
                                px-1.5
-                               py-0.5"
-                    >
+                               py-0.5">
                         K
                     </span>
 
@@ -195,22 +171,13 @@
                        border border-gray-200
                        flex items-center justify-center
                        text-gray-500
-                       hover:bg-gray-50"
-            >
+                       hover:bg-gray-50">
 
                 {{-- Luna SVG --}}
-                <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path
-                        d="M21 12.79A9 9 0 1 1 11.21 3
-                           7 7 0 0 0 21 12.79z"
-                    />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3
+                           7 7 0 0 0 21 12.79z" />
                 </svg>
 
             </button>
@@ -224,22 +191,13 @@
                        border border-gray-200
                        flex items-center justify-center
                        text-gray-500
-                       hover:bg-gray-50"
-            >
+                       hover:bg-gray-50">
 
-                <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path
-                        d="M18 8a6 6 0 0 0-12 0
-                           c0 7-3 7-3 9h18c0-2-3-2-3-9"
-                    />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M18 8a6 6 0 0 0-12 0
+                           c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
 
 
@@ -252,8 +210,7 @@
                            rounded-full
                            bg-orange-400
                            border-2
-                           border-white"
-                ></span>
+                           border-white"></span>
 
             </button>
 
@@ -265,8 +222,7 @@
                        px-2
                        py-1
                        rounded-xl
-                       hover:bg-gray-50"
-            >
+                       hover:bg-gray-50">
 
                 <div
                     class="w-10 h-10
@@ -275,8 +231,7 @@
                            text-blue-600
                            flex items-center justify-center
                            text-sm
-                           font-bold"
-                >
+                           font-bold">
                     MR
                 </div>
 
@@ -284,7 +239,7 @@
                 <div class="hidden lg:block text-left">
 
                     <p class="text-sm font-semibold text-gray-800">
-                        Manuel
+                        {{ Auth::user()->user_name }}
                     </p>
 
                     <p class="text-xs text-gray-400">
@@ -295,18 +250,22 @@
 
 
                 {{-- FLECHA --}}
-                <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="m6 9 6 6 6-6"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="m6 9 6 6 6-6" />
                 </svg>
 
             </button>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <span class="material-symbols-outlined">
+                        exit_to_app
+                    </span>
+                </button>
+            </form>
 
         </div>
 

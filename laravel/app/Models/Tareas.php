@@ -8,10 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tareas extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;    
     protected $table = 'tareas';
     protected $primaryKey = 'id';
-    protected $fillable = ['titulo', 'descripcion', 'categoria_id', 'usuario_id'];
+    protected $fillable = ['titulo', 'descripcion', 'categoria_id', 'usuario_id', 'estado'];
+
+    protected $casts = [
+        'estado' => 'boolean',
+        'categoria_id' => 'integer',
+        'usuario_id' => 'integer'
+    ];
 
     public function categoria()
     {

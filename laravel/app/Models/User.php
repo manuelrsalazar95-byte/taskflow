@@ -13,4 +13,14 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
     protected $fillable = ['user_name', 'password'];
     protected $hidden = ['password'];
+
+    protected $casts = [
+        'password' => 'hashed',
+
+    ];
+
+    public function tareas()
+    {
+        return $this->hasMany(Tareas::class, 'usuario_id');
+    }
 }
