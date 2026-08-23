@@ -31,5 +31,7 @@
                 Registrarse
             </button>
         </div>
+        <div class="mt-4">
+            <a href="{{ route('login') }}" class="text-blue-500 hover:text-blue-700">¿Ya tienes una cuenta? Inicia sesión</a>
     </form>
 @endsection

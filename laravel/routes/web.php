@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\CategoriaController;
 
 
 
@@ -22,5 +20,8 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+
+    //Rutas para catergoria
+    Route::resource('categorias', CategoriaController::class)->except(['show']);
 
 });

@@ -115,7 +115,7 @@
 
 
         {{-- VENTAS --}}
-        <a href="#"
+        <a href="{{ route('categorias.index') }}"
             class="flex items-center gap-3
            w-full px-3 py-2.5 mb-1
            rounded-lg

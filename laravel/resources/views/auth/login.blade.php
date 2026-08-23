@@ -36,5 +36,7 @@
                 Iniciar Sesión
             </button>
         </div>
+        <div class="mt-4">
+            <a href="{{ route('register') }}" class="text-blue-500 hover:text-blue-700">¿No tienes una cuenta? Regístrate</a>
     </form>
 @endsection

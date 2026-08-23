@@ -5,7 +5,7 @@
         <main class="main-panel transition-all duration-300 ease-in-out ml-[250px]">
             @include('partials.navbar')
             <div class="relative">
-                <div class="content mb-16 md:mb-0">
+                <div class="content mt-16 md:mb-0 p-8">
                     @yield('content')
                 </div>
             </div>
