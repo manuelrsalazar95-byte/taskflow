@@ -15,7 +15,7 @@ Route::middleware('guest')->group(function () {
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('/', function () {
         return view('welcome');
     })->name('dashboard');
 
