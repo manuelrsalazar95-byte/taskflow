@@ -1,13 +1,52 @@
 @extends('layouts.base')
+
 @section('body')
-<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <div class="mb-4 text-center">
-            <h1 class="text-2xl font-semibold text-gray-800">Bienvenido a TaskFlow</h1>
-            <p class="text-gray-600">Gestiona tus tareas de manera eficiente</p>
+
+<div
+    class="min-h-screen flex items-center justify-center p-6
+           bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
+
+    <div
+        class="w-full max-w-md
+               bg-white/90 backdrop-blur
+               rounded-3xl
+               shadow-xl
+               border border-white/50
+               overflow-hidden">
+
+        {{-- HEADER --}}
+        <div class="px-8 pt-8 pb-6 text-center">
+
+            <div
+                class="w-20 h-20 mx-auto mb-5
+                       rounded-3xl
+                       bg-blue-600
+                       flex items-center justify-center
+                       shadow-lg">
+
+                <span class="material-symbols-outlined text-white text-4xl">
+                    task_alt
+                </span>
+
+            </div>
+
+            <h1 class="text-3xl font-bold text-gray-800">
+                TaskFlow
+            </h1>
+
+            <p class="text-gray-500 mt-2">
+                Gestiona tus tareas de manera simple y eficiente
+            </p>
+
         </div>
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+
+        {{-- CONTENIDO --}}
+        <div class="px-8 pb-8">
             @yield('content')
         </div>
+
     </div>
+
+</div>
+
 @endsection

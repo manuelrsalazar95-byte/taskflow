@@ -1,42 +1,114 @@
 @extends('layouts.guest')
+
 @section('content')
-    <h1 class="text-2xl font-semibold text-gray-800 mb-4">Iniciar Sesión</h1>
+
+<div class="w-full">
+
+    {{-- ENCABEZADO --}}
+    <div class="text-center mb-8">
+
+        <h1 class="text-3xl font-bold text-gray-800">
+            Bienvenido
+        </h1>
+
+        <p class="text-gray-500 mt-2">
+            Inicia sesión para continuar
+        </p>
+
+    </div>
+
+    {{-- ERRORES --}}
     @if ($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong class="font-bold">Error!</strong>
-            <span class="block sm:inline">Por favor, corrige los siguientes errores:</span>
-            <ul class="mt-2 list-disc list-inside">
+        <div
+            class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined">
+                    error
+                </span>
+
+                <span class="font-semibold">
+                    Se encontraron errores
+                </span>
+            </div>
+
+            <ul class="list-disc pl-6 text-sm">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
+
         </div>
     @endif
-    
-    <form method="POST" action="{{ route('login') }}">
+
+    {{-- FORMULARIO --}}
+    <form method="POST" action="{{ route('login') }}" class="space-y-5">
+
         @csrf
 
-        <div class="mb-4">
-            <label for="user_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario</label>
-            <input id="user_name" type="text"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                name="user_name" value="{{ old('user_name') }}" required autofocus>
+        {{-- USUARIO --}}
+        <div>
+
+            <label for="user_name"
+                class="block text-sm font-medium text-gray-700 mb-2">
+                Usuario
+            </label>
+
+            <input
+                id="user_name"
+                type="text"
+                name="user_name"
+                value="{{ old('user_name') }}"
+                required
+                autofocus
+                placeholder="Ingrese su usuario"
+                class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
+
         </div>
 
-        <div class="mb-4">
-            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
-            <input id="password" type="password"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                name="password" required>
+        {{-- PASSWORD --}}
+        <div>
+
+            <label for="password"
+                class="block text-sm font-medium text-gray-700 mb-2">
+                Contraseña
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                name="password"
+                required
+                placeholder="Ingrese su contraseña"
+                class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
+
         </div>
 
-        <div class="flex items-center justify-between">
-            <button type="submit"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Iniciar Sesión
-            </button>
-        </div>
-        <div class="mt-4">
-            <a href="{{ route('register') }}" class="text-blue-500 hover:text-blue-700">¿No tienes una cuenta? Regístrate</a>
+        {{-- BOTON --}}
+        <button
+            type="submit"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition shadow-sm">
+
+            Iniciar Sesión
+
+        </button>
+
     </form>
+
+    {{-- REGISTRO --}}
+    <div class="text-center mt-6">
+
+        <span class="text-gray-500">
+            ¿No tienes una cuenta?
+        </span>
+
+        <a href="{{ route('register') }}"
+            class="text-blue-600 hover:text-blue-700 font-medium ml-1">
+            Regístrate
+        </a>
+
+    </div>
+
+</div>
+
 @endsection

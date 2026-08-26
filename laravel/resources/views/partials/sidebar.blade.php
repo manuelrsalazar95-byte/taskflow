@@ -25,8 +25,7 @@
                        shadow-sm">
 
 
-                <span 
-                    class="material-symbols-outlined">settings_heart</span>
+                <span class="material-symbols-outlined">settings_heart</span>
 
 
             </div>
@@ -85,9 +84,9 @@
 
         </p>
 
-{{-- DASHBOARD --}}
-<a href="#"
-    class="flex items-center gap-3
+        {{-- DASHBOARD --}}
+        <a href={{ route('dashboard') }}
+            class="flex items-center gap-3
     w-full
     px-3 py-2.5
     mb-1
@@ -97,15 +96,34 @@
     font-semibold
     text-sm">
 
-    <span class="w-5 text-center text-base">📊</span>
+            <span class="w-5 text-center text-base">📊</span>
 
-    <span>Dashboard</span>
+            <span>Dashboard</span>
 
-</a>
+        </a>
 
-{{-- CATEGORIA --}}
-<a href="{{ route('categorias.index') }}"
-    class="flex items-center gap-3
+        {{-- CATEGORÍAS --}}
+        <a href="{{ route('categorias.index') }}"
+            class="flex items-center gap-3
+    w-full px-3 py-3 mb-2
+    rounded-xl
+    text-gray-600
+    hover:bg-blue-50
+    hover:text-blue-600
+    transition-all duration-200
+    text-sm font-medium">
+
+            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100">
+                📁
+            </span>
+
+            <span>Categorías</span>
+
+        </a>
+
+        {{-- TAREAS --}}
+        <a href="{{ route('tareas.index') }}"
+            class="flex items-center gap-3
     w-full px-3 py-2.5 mb-1
     rounded-lg
     text-gray-600
@@ -113,207 +131,16 @@
     hover:text-blue-600
     text-sm">
 
-    <span class="w-5 text-center text-base">📁</span>
+            <span class="w-5 text-center text-base">📝</span>
 
-    <span>Categoria</span>
-
-</a>
-
-{{-- TAREAS --}}
-<a href="#"
-    class="flex items-center gap-3
-    w-full px-3 py-2.5 mb-1
-    rounded-lg
-    text-gray-600
-    hover:bg-gray-50
-    hover:text-blue-600
-    text-sm">
-
-    <span class="w-5 text-center text-base">📝</span>
-
-    <span>Tareas</span>
-
-</a>
-
-
-        <!-- {{-- PRODUCTOS --}}
-        <a
-            href="#"
-            class="flex items-center gap-3
-                   px-3 py-2.5
-                   mb-1
-                   rounded-lg
-                   text-gray-600
-                   hover:bg-gray-50
-                   hover:text-blue-600
-                   text-sm
-                   font-medium
-                   transition-all">
-
-            <span
-                class="material-symbols-outlined
-                       text-[20px]">
-
-                inventory_2
-
-            </span>
-
-            <span>
-                Productos
-            </span>
-
-        </a>
-
-
-
-        {{-- INVENTARIO --}}
-        <a
-            href="#"
-            class="flex items-center gap-3
-                   px-3 py-2.5
-                   mb-1
-                   rounded-lg
-                   text-gray-600
-                   hover:bg-gray-50
-                   hover:text-blue-600
-                   text-sm
-                   font-medium
-                   transition-all">
-
-            <span
-                class="material-symbols-outlined
-                       text-[20px]">
-
-                warehouse
-
-            </span>
-
-            <span>
-                Inventario
-            </span>
-
-        </a>
-
-
-
-        {{-- REPORTES --}}
-        <a
-            href="#"
-            class="flex items-center gap-3
-                   px-3 py-2.5
-                   mb-1
-                   rounded-lg
-                   text-gray-600
-                   hover:bg-gray-50
-                   hover:text-blue-600
-                   text-sm
-                   font-medium
-                   transition-all">
-
-            <span
-                class="material-symbols-outlined
-                       text-[20px]">
-
-                bar_chart
-
-            </span>
-
-            <span>
-                Reportes
-            </span>
-
-        </a>
-
-
-
-        {{-- CONFIGURACIÓN --}}
-        <a
-            href="#"
-            class="flex items-center gap-3
-                   px-3 py-2.5
-                   mb-1
-                   rounded-lg
-                   text-gray-600
-                   hover:bg-gray-50
-                   hover:text-blue-600
-                   text-sm
-                   font-medium
-                   transition-all">
-
-            <span
-                class="material-symbols-outlined
-                       text-[20px]">
-
-                settings
-
-            </span>
-
-            <span>
-                Configuración
-            </span>
+            <span>Tareas</span>
 
         </a>
 
 
     </div>
 
-
-    {{-- PARTE INFERIOR --}}
-    <div
-        class="flex-shrink-0
-               px-4 py-4
-               border-t border-gray-100">
-
-
-        <div
-            class="flex items-center gap-3
-                   rounded-xl
-                   bg-gray-50
-                   px-3 py-3">
-
-
-            {{-- AVATAR --}}
-            <div
-                class="w-9 h-9
-                       rounded-full
-                       bg-blue-100
-                       flex items-center justify-center
-                       text-xs font-bold
-                       text-blue-600
-                       flex-shrink-0">
-
-                MR
-
-            </div>
-
-
-            {{-- INFO --}}
-            <div class="min-w-0">
-
-                <p
-                    class="text-sm
-                           font-semibold
-                           text-gray-800
-                           truncate">
-
-                    Manuel
-
-                </p>
-
-                <p
-                    class="text-xs
-                           text-gray-400
-                           truncate">
-
-                    Administrador
-
-                </p> -->
-
-    </div>
-
 </div>
 
 
-</div>
 
-</div>

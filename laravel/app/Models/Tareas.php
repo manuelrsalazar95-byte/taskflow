@@ -2,29 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tareas extends Model
 {
-    use HasFactory, SoftDeletes;    
+    use SoftDeletes;
+
     protected $table = 'tareas';
-    protected $primaryKey = 'id';
-    protected $fillable = ['titulo', 'descripcion', 'categoria_id', 'usuario_id', 'estado'];
 
-    protected $casts = [
-        'estado' => 'boolean',
-        'categoria_id' => 'integer',
-        'usuario_id' => 'integer'
+    protected $fillable = [
+        'categoria_id',
+        'usuario_id',
+        'titulo',
+        'descripcion',
+        'estado',
     ];
-
-    public function categoria()
-    {
-        return $this->belongsTo(Categoria::class, 'categoria_id');
-    }
-    public function usuario()
-    {
-        return $this->belongsTo(User::class, 'usuario_id');
-    }
 }

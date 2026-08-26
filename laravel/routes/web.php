@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\TareaController;
 
 
 
@@ -23,5 +24,8 @@ Route::middleware('auth')->group(function () {
 
     //Rutas para categoria
     Route::resource('categorias', CategoriaController::class)->except(['show']);
+    
+    //Rutas para tareas
+    Route::resource('tareas', 'App\\Http\\Controllers\\TareasController')->except(['show']);
 
 });

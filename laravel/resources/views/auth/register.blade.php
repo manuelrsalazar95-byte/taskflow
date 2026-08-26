@@ -1,37 +1,137 @@
 @extends('layouts.guest')
+
 @section('content')
-    <h1 class="text-2xl font-semibold text-gray-800 mb-4">Registro de Usuario</h1>
-    <form method="POST" action="{{ route('register') }}">
+
+<div class="w-full">
+
+    {{-- ENCABEZADO --}}
+    <div class="text-center mb-8">
+
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-green-100 flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-3xl text-green-600">
+                person_add
+            </span>
+        </div>
+
+        <h1 class="text-3xl font-bold text-gray-800">
+            Crear Cuenta
+        </h1>
+
+        <p class="text-gray-500 mt-2">
+            Regístrate para comenzar a utilizar TaskFlow
+        </p>
+
+    </div>
+
+    {{-- ERRORES --}}
+    @if ($errors->any())
+        <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined">
+                    error
+                </span>
+
+                <span class="font-semibold">
+                    Se encontraron errores
+                </span>
+            </div>
+
+            <ul class="list-disc pl-6 text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+
+        </div>
+    @endif
+
+    {{-- FORMULARIO --}}
+    <form method="POST" action="{{ route('register') }}" class="space-y-5">
+
         @csrf
 
-        <div class="mb-4">
-            <label for="user_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario</label>
-            <input id="user_name" type="text"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                name="user_name" value="{{ old('user_name') }}" required autofocus>
+        {{-- USUARIO --}}
+        <div>
+
+            <label for="user_name"
+                class="block text-sm font-medium text-gray-700 mb-2">
+                Usuario
+            </label>
+
+            <input
+                id="user_name"
+                type="text"
+                name="user_name"
+                value="{{ old('user_name') }}"
+                required
+                autofocus
+                placeholder="Ingrese un nombre de usuario"
+                class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition">
+
         </div>
 
-        <div class="mb-4">
-            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
-            <input id="password" type="password"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                name="password" required>
+        {{-- CONTRASEÑA --}}
+        <div>
+
+            <label for="password"
+                class="block text-sm font-medium text-gray-700 mb-2">
+                Contraseña
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                name="password"
+                required
+                placeholder="Ingrese una contraseña"
+                class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition">
+
         </div>
 
-        <div class="mb-4">
-            <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Confirmar Contraseña</label>
-            <input id="password_confirmation" type="password"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                name="password_confirmation" required>
+        {{-- CONFIRMAR CONTRASEÑA --}}
+        <div>
+
+            <label for="password_confirmation"
+                class="block text-sm font-medium text-gray-700 mb-2">
+                Confirmar Contraseña
+            </label>
+
+            <input
+                id="password_confirmation"
+                type="password"
+                name="password_confirmation"
+                required
+                placeholder="Repita la contraseña"
+                class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition">
+
         </div>
 
-        <div class="flex items-center justify-between">
-            <button type="submit"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Registrarse
-            </button>
-        </div>
-        <div class="mt-4">
-            <a href="{{ route('login') }}" class="text-blue-500 hover:text-blue-700">¿Ya tienes una cuenta? Inicia sesión</a>
+        {{-- BOTÓN --}}
+        <button
+            type="submit"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-xl transition shadow-sm">
+
+            Crear Cuenta
+
+        </button>
+
     </form>
+
+    {{-- LOGIN --}}
+    <div class="text-center mt-6">
+
+        <span class="text-gray-500">
+            ¿Ya tienes una cuenta?
+        </span>
+
+        <a href="{{ route('login') }}"
+            class="text-green-600 hover:text-green-700 font-medium ml-1">
+            Inicia sesión
+        </a>
+
+    </div>
+
+</div>
+
 @endsection
