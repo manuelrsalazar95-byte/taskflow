@@ -19,7 +19,7 @@
             {{-- ICONO LOGO --}}
             <div
                 class="w-9 h-9 rounded-xl
-                       bg-blue-600
+                       bg-blue-400
                        flex-shrink-0
                        flex items-center justify-center
                        shadow-sm">
@@ -41,7 +41,7 @@
                            tracking-tight
                            text-gray-900">
 
-                    PRUEBITA
+                    Pruebita
 
                 </span>
 
@@ -50,7 +50,7 @@
                            font-medium
                            text-gray-400">
 
-                    v1
+                    v1.1
 
                 </span>
 
@@ -85,79 +85,55 @@
 
         </p>
 
+{{-- DASHBOARD --}}
+<a href="#"
+    class="flex items-center gap-3
+    w-full
+    px-3 py-2.5
+    mb-1
+    rounded-lg
+    bg-blue-50
+    text-blue-600
+    font-semibold
+    text-sm">
 
-        {{-- DASHBOARD --}}
-        <a href="#"
-            class="flex items-center gap-3
-           w-full
-           px-3 py-2.5
-           mb-1
-           rounded-lg
-           bg-blue-50
-           text-blue-600
-           font-semibold
-           text-sm">
+    <span class="w-5 text-center text-base">📊</span>
 
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <rect x="3" y="3" width="7" height="7" />
-                <rect x="14" y="3" width="7" height="7" />
-                <rect x="3" y="14" width="7" height="7" />
-                <rect x="14" y="14" width="7" height="7" />
-            </svg>
+    <span>Dashboard</span>
 
-            <span>
-                Dashboard
-            </span>
+</a>
 
-        </a>
+{{-- CATEGORIA --}}
+<a href="{{ route('categorias.index') }}"
+    class="flex items-center gap-3
+    w-full px-3 py-2.5 mb-1
+    rounded-lg
+    text-gray-600
+    hover:bg-gray-50
+    hover:text-blue-600
+    text-sm">
 
+    <span class="w-5 text-center text-base">📁</span>
 
+    <span>Categoria</span>
 
-        {{-- VENTAS --}}
-        <a href="{{ route('categorias.index') }}"
-            class="flex items-center gap-3
-           w-full px-3 py-2.5 mb-1
-           rounded-lg
-           text-gray-600
-           hover:bg-gray-50
-           hover:text-blue-600
-           text-sm">
+</a>
 
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <path d="M3 3h18v18H3z" />
-                <path d="M7 16v-3" />
-                <path d="M12 16V8" />
-                <path d="M17 16v-6" />
-            </svg>
+{{-- TAREAS --}}
+<a href="#"
+    class="flex items-center gap-3
+    w-full px-3 py-2.5 mb-1
+    rounded-lg
+    text-gray-600
+    hover:bg-gray-50
+    hover:text-blue-600
+    text-sm">
 
-            <span>Categoria</span>
+    <span class="w-5 text-center text-base">📝</span>
 
-        </a>
+    <span>Tareas</span>
 
-
-        {{-- CLIENTES --}}
-        <a href="#"
-            class="flex items-center gap-3
-           w-full px-3 py-2.5 mb-1
-           rounded-lg
-           text-gray-600
-           hover:bg-gray-50
-           hover:text-blue-600
-           text-sm">
-
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <circle cx="9" cy="7" r="4" />
-                <path d="M3 21v-2a6 6 0 0 1 12 0v2" />
-                <path d="M16 3.5a4 4 0 0 1 0 7" />
-                <path d="M21 21v-2a6 6 0 0 0-4-5.65" />
-            </svg>
-
-            <span>Tareas</span>
-
-        </a>
+</a>
 
 
         <!-- {{-- PRODUCTOS --}}

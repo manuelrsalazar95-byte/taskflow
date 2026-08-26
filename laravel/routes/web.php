@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
-    //Rutas para catergoria
+    //Rutas para categoria
     Route::resource('categorias', CategoriaController::class)->except(['show']);
 
 });
