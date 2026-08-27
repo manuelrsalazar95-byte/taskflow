@@ -87,6 +87,84 @@
                 </div>
 
 
+                {{-- CATEGORÍA --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Categoría
+                    </label>
+
+                    <select
+                        name="categoria_id"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+
+                        <option value="">
+                            Seleccionar categoría
+                        </option>
+
+                        @foreach($categorias ?? [] as $categoria)
+
+                            <option
+                                value="{{ $categoria->id }}"
+                                {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
+
+                                {{ $categoria->name }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                    @error('categoria_id')
+                        <p class="text-sm text-red-600 mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+
+                {{-- USUARIO --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Usuario
+                    </label>
+
+                    <select
+                        name="usuario_id"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+
+                        <option value="">
+                            Seleccionar usuario
+                        </option>
+
+                        @foreach($usuarios ?? [] as $usuario)
+
+                            <option
+                                value="{{ $usuario->id }}"
+                                {{ old('usuario_id') == $usuario->id ? 'selected' : '' }}>
+
+                                {{ $usuario->name }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                    @error('usuario_id')
+                        <p class="text-sm text-red-600 mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+
                 {{-- ESTADO --}}
                 <div>
 
