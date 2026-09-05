@@ -18,4 +18,14 @@ class Tareas extends Model
         'descripcion',
         'estado',
     ];
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id'); // <--- Apunta a User::class
+    }
 }
