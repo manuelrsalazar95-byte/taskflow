@@ -45,7 +45,6 @@ class TareasController extends Controller
             'descripcion' => 'required|string',
             'categoria_id' => 'required|exists:categoria,id',
             'usuario_id' => 'required|exists:usuarios,id',
-            'estado' => 'required|in:pendiente,en_progreso,completada',
         ]);
 
         Tareas::create([
@@ -53,7 +52,7 @@ class TareasController extends Controller
             'usuario_id' => $request->usuario_id,
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
-            'estado' => $request->estado,
+            'estado' => 'pendiente',
         ]);
 
         return redirect()
@@ -89,7 +88,6 @@ class TareasController extends Controller
             'descripcion' => 'required|string',
             'categoria_id' => 'required|exists:categoria,id',
             'usuario_id' => 'required|exists:usuarios,id',
-            'estado' => 'required|in:pendiente,en_progreso,completada',
         ]);
 
         $tarea->update([
@@ -97,12 +95,31 @@ class TareasController extends Controller
             'usuario_id' => $request->usuario_id,
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
-            'estado' => $request->estado,
         ]);
 
         return redirect()
             ->route('tareas.index')
             ->with('success', 'Tarea actualizada correctamente.');
+    }
+
+    /**
+     * Actualizar solo el estado de la tarea
+     */
+    public function updateEstado(Request $request, $id)
+    {
+        $tarea = Tareas::findOrFail($id);
+
+        $request->validate([
+            'estado' => 'required|in:pendiente,en_progreso,completada',
+        ]);
+
+        $tarea->update([
+            'estado' => $request->estado,
+        ]);
+
+        return redirect()
+            ->route('tareas.index')
+            ->with('success', 'Estado de la tarea actualizado correctamente.');
     }
 
     /**
@@ -115,6 +132,44 @@ class TareasController extends Controller
 
         return redirect()
             ->route('tareas.index')
-            ->with('success', 'Tarea eliminada correctamente.');
+            ->with('success', 'Tarea enviada a la papelera correctamente.');
+    }
+
+    /**
+     * Mostrar la papelera de tareas eliminadas
+     */
+    public function trash()
+    {
+        $this->extended['titulo'] = 'Papelera de Tareas';
+        $this->extended['descripcion'] = 'Tareas eliminadas recientemente.';
+        $this->extended['model'] = Tareas::onlyTrashed()->with(['categoria', 'usuario'])->orderBy('deleted_at', 'desc')->get();
+
+        return view('tareas.trash', $this->extended);
+    }
+
+    /**
+     * Restaurar una tarea de la papelera
+     */
+    public function restore($id)
+    {
+        $tarea = Tareas::onlyTrashed()->findOrFail($id);
+        $tarea->restore();
+
+        return redirect()
+            ->route('tareas.trash')
+            ->with('success', 'Tarea restaurada correctamente.');
+    }
+
+    /**
+     * Eliminar definitivamente una tarea
+     */
+    public function forceDelete($id)
+    {
+        $tarea = Tareas::onlyTrashed()->findOrFail($id);
+        $tarea->forceDelete();
+
+        return redirect()
+            ->route('tareas.trash')
+            ->with('success', 'Tarea eliminada definitivamente.');
     }
 }

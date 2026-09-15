@@ -88,12 +88,12 @@
 
                         <td class="px-6 py-4 border-t">
 
-                            <div class="flex items-center justify-center gap-3">
+                            <div class="flex items-center justify-center gap-2">
 
                                 <a href="{{ route('categorias.edit', $x->id) }}"
-                                    class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 transition">
 
-                                    <span class="material-symbols-outlined text-[18px]">
+                                    <span class="material-symbols-outlined text-[16px]">
                                         edit
                                     </span>
 
@@ -101,7 +101,7 @@
                                 </a>
 
                                 <form action="{{ route('categorias.destroy', $x->id) }}"
-                                    method="POST">
+                                    method="POST" class="inline-flex items-center m-0">
 
                                     @csrf
                                     @method('DELETE')
@@ -109,9 +109,9 @@
                                     <button
                                         type="submit"
                                         onclick="return confirm('¿Está seguro de eliminar esta categoría?')"
-                                        class="inline-flex items-center gap-1 text-red-600 hover:text-red-800">
+                                        class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition">
 
-                                        <span class="material-symbols-outlined text-[18px]">
+                                        <span class="material-symbols-outlined text-[16px]">
                                             delete
                                         </span>
 

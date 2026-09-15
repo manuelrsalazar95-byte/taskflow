@@ -29,23 +29,33 @@
             </div>
         </div>
 
-        {{-- CREAR --}}
-        <a href="{{ route('tareas.create') }}"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition">
+        {{-- CREAR Y PAPELERA --}}
+        <div class="flex items-center gap-3">
+            <a href="{{ route('tareas.trash') }}"
+                class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium shadow-sm transition">
+                <span class="material-symbols-outlined text-[20px]">
+                    delete_sweep
+                </span>
+                Papelera
+            </a>
 
-            <span class="material-symbols-outlined text-[20px]">
-                add
-            </span>
+            <a href="{{ route('tareas.create') }}"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition">
 
-            Crear Tarea
+                <span class="material-symbols-outlined text-[20px]">
+                    add
+                </span>
 
-        </a>
+                Crear Tarea
+
+            </a>
+        </div>
 
     </div>
 
 
     {{-- TABLA --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
 
         <div class="px-6 py-4 border-b border-gray-100">
             <h2 class="font-semibold text-gray-700">
@@ -53,7 +63,7 @@
             </h2>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto pb-4">
 
             <table class="w-full">
 
@@ -113,27 +123,47 @@
                             </td>
 
                             {{-- ESTADO --}}
-                            <td class="px-6 py-4 border-t text-center">
+                            <td class="px-6 py-4 border-t text-center relative">
 
-                                @if($x->estado == 'pendiente')
+                                <div class="relative inline-block text-left">
+                                    <button type="button" onclick="toggleStatusDropdown({{ $x->id }})"
+                                        class="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3.5 py-1.5 border cursor-pointer transition shadow-sm
+                                        @if($x->estado == 'pendiente') bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200
+                                        @elseif($x->estado == 'en_progreso') bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200
+                                        @elseif($x->estado == 'completada') bg-green-100 text-green-800 border-green-300 hover:bg-green-200
+                                        @endif">
+                                        <span>
+                                            @if($x->estado == 'pendiente') Pendiente
+                                            @elseif($x->estado == 'en_progreso') En progreso
+                                            @elseif($x->estado == 'completada') Completada
+                                            @endif
+                                        </span>
+                                        <span class="material-symbols-outlined text-[14px]">expand_more</span>
+                                    </button>
 
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
-                                        Pendiente
-                                    </span>
+                                    <div id="status-menu-{{ $x->id }}" class="hidden absolute left-1/2 -translate-x-1/2 mt-2 w-40 rounded-xl bg-white shadow-xl border border-gray-100 py-1.5 z-50 text-left">
+                                        <form action="{{ route('tareas.estado', $x->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="estado" id="input-estado-{{ $x->id }}">
+                                            
+                                            <button type="submit" onclick="document.getElementById('input-estado-{{ $x->id }}').value='pendiente'"
+                                                class="w-full text-left px-4 py-2 text-xs font-medium text-yellow-700 hover:bg-yellow-50 flex items-center gap-2 transition">
+                                                <span class="w-2 h-2 rounded-full bg-yellow-500"></span> Pendiente
+                                            </button>
 
-                                @elseif($x->estado == 'en_progreso')
+                                            <button type="submit" onclick="document.getElementById('input-estado-{{ $x->id }}').value='en_progreso'"
+                                                class="w-full text-left px-4 py-2 text-xs font-medium text-blue-700 hover:bg-blue-50 flex items-center gap-2 transition">
+                                                <span class="w-2 h-2 rounded-full bg-blue-500"></span> En progreso
+                                            </button>
 
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">
-                                        En progreso
-                                    </span>
-
-                                @elseif($x->estado == 'completada')
-
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
-                                        Completada
-                                    </span>
-
-                                @endif
+                                            <button type="submit" onclick="document.getElementById('input-estado-{{ $x->id }}').value='completada'"
+                                                class="w-full text-left px-4 py-2 text-xs font-medium text-green-700 hover:bg-green-50 flex items-center gap-2 transition">
+                                                <span class="w-2 h-2 rounded-full bg-green-500"></span> Completada
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
 
                             </td>
 
@@ -141,12 +171,12 @@
                             {{-- ACCIONES --}}
                             <td class="px-6 py-4 border-t">
 
-                                <div class="flex items-center justify-center gap-3">
+                                <div class="flex items-center justify-center gap-2">
 
                                     <a href="{{ route('tareas.edit', $x->id) }}"
-                                        class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                                        class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 transition">
 
-                                        <span class="material-symbols-outlined text-[18px]">
+                                        <span class="material-symbols-outlined text-[16px]">
                                             edit
                                         </span>
 
@@ -156,7 +186,7 @@
 
 
                                     <form action="{{ route('tareas.destroy', $x->id) }}"
-                                        method="POST">
+                                        method="POST" class="inline-flex items-center m-0">
 
                                         @csrf
                                         @method('DELETE')
@@ -164,9 +194,9 @@
                                         <button
                                             type="submit"
                                             onclick="return confirm('¿Está seguro de eliminar esta tarea?')"
-                                            class="inline-flex items-center gap-1 text-red-600 hover:text-red-800">
+                                            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition">
 
-                                            <span class="material-symbols-outlined text-[18px]">
+                                            <span class="material-symbols-outlined text-[16px]">
                                                 delete
                                             </span>
 
@@ -219,5 +249,28 @@
     </div>
 
 </div>
+
+<script>
+    function toggleStatusDropdown(id) {
+        // Close all other dropdowns first
+        document.querySelectorAll('[id^="status-menu-"]').forEach(menu => {
+            if (menu.id !== 'status-menu-' + id) {
+                menu.classList.add('hidden');
+            }
+        });
+        // Toggle current
+        const menu = document.getElementById('status-menu-' + id);
+        menu.classList.toggle('hidden');
+    }
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+        if (!e.target.closest('[onclick^="toggleStatusDropdown"]')) {
+            document.querySelectorAll('[id^="status-menu-"]').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        }
+    });
+</script>
 
 @endsection

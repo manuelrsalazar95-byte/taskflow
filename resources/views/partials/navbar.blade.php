@@ -144,69 +144,84 @@
 
             </button>
 
-            {{-- USUARIO --}}
-            <button
-                class="flex items-center gap-3
-                       ml-1
-                       px-2
-                       py-1
-                       rounded-xl
-                       hover:bg-gray-50">
-
-                <div
-                    class="w-10 h-10
-                           rounded-full
-                           bg-blue-100
-                           text-blue-600
-                           flex items-center justify-center
-                           text-sm
-                           font-bold">
-                    MR
-                </div>
-
-                <div class="hidden lg:block text-left">
-
-                    <p class="text-sm font-semibold text-gray-800">
-                        {{ Auth::user()->user_name }}
-                    </p>
-
-                    <p class="text-xs text-gray-400">
-                        Administrador
-                    </p>
-
-                </div>
-
-                <span class="material-symbols-outlined text-gray-500">
-                    keyboard_arrow_down
-                </span>
-
-            </button>
-
-            {{-- LOGOUT --}}
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-
+            {{-- USUARIO Y DROPDOWN --}}
+            <div class="relative">
                 <button
-                    type="submit"
-                    class="bg-blue-500
-                           hover:bg-blue-700
-                           text-white
-                           p-2
-                           rounded-lg
-                           flex
-                           items-center
-                           justify-center">
+                    type="button"
+                    onclick="toggleUserDropdown()"
+                    class="flex items-center gap-3
+                           ml-1
+                           px-2
+                           py-1
+                           rounded-xl
+                           hover:bg-gray-50
+                           transition">
 
-                    <span class="material-symbols-outlined">
-                        logout
+                    <div
+                        class="w-10 h-10
+                               rounded-full
+                               bg-blue-100
+                               text-blue-600
+                               flex items-center justify-center
+                               text-sm
+                               font-bold">
+                        {{ strtoupper(substr(Auth::user()->user_name ?? 'U', 0, 2)) }}
+                    </div>
+
+                    <div class="hidden lg:block text-left">
+
+                        <p class="text-sm font-semibold text-gray-800">
+                            {{ Auth::user()->user_name }}
+                        </p>
+
+                        <p class="text-xs text-gray-400">
+                            Administrador
+                        </p>
+
+                    </div>
+
+                    <span class="material-symbols-outlined text-gray-500">
+                        keyboard_arrow_down
                     </span>
 
                 </button>
 
-            </form>
+                {{-- Menú desplegable de usuario --}}
+                <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white shadow-xl border border-gray-100 py-2 z-50">
+                    <div class="px-4 py-2 border-b border-gray-100 lg:hidden">
+                        <p class="text-sm font-semibold text-gray-800">{{ Auth::user()->user_name }}</p>
+                        <p class="text-xs text-gray-400">Administrador</p>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 transition">
+                            <span class="material-symbols-outlined text-[18px]">
+                                logout
+                            </span>
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
 
         </div>
 
     </div>
 
 </header>
+
+<script>
+    function toggleUserDropdown() {
+        const menu = document.getElementById('user-dropdown-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    window.addEventListener('click', function(e) {
+        if (!e.target.closest('[onclick="toggleUserDropdown()"]') && !e.target.closest('#user-dropdown-menu')) {
+            const menu = document.getElementById('user-dropdown-menu');
+            if (menu) menu.classList.add('hidden');
+        }
+    });
+</script>

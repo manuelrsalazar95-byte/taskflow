@@ -24,5 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('categorias', CategoriaController::class)->except(['show']);
 
     // Rutas para tareas
+    Route::get('/tareas/papelera', [TareasController::class, 'trash'])->name('tareas.trash');
+    Route::patch('/tareas/{id}/restore', [TareasController::class, 'restore'])->name('tareas.restore');
+    Route::delete('/tareas/{id}/force', [TareasController::class, 'forceDelete'])->name('tareas.forceDelete');
+    Route::patch('/tareas/{id}/estado', [TareasController::class, 'updateEstado'])->name('tareas.estado');
     Route::resource('tareas', TareasController::class)->except(['show']);
 });
