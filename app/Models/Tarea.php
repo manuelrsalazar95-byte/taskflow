@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tareas extends Model
+class Tarea extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'tareas';
 
@@ -26,6 +27,6 @@ class Tareas extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class, 'usuario_id'); // <--- Apunta a User::class
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 }

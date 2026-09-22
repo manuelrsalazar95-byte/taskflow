@@ -1,53 +1,108 @@
-@extends('layouts.app') {{-- Cambia por tu layout si aplica --}}
+@extends('layouts.app')
+
+@section('title', 'Editar tarea · TaskFlow')
 
 @section('content')
-    <div class="container mx-auto p-6">
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="p-2 bg-amber-100 rounded-lg text-amber-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                        </path>
-                    </svg>
-                </div>
+
+<div class="space-y-6">
+
+    {{-- Encabezado --}}
+    <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-6 rounded-2xl shadow-md">
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-4xl" aria-hidden="true" focusable="false">edit</span>
+
                 <div>
-                    <h1 class="text-xl font-bold text-gray-800">Editar Tarea</h1>
-                    <p class="text-sm text-gray-500">Actualiza la información de la tarea.</p>
+                    <h1 class="text-2xl font-bold">
+                        {{ $titulo }}
+                    </h1>
+
+                    <p class="text-blue-50 mt-1">
+                        {{ $descripcion }}
+                    </p>
                 </div>
             </div>
 
-            <form action="{{ route('tareas.update', $tarea->id) }}" method="POST" class="space-y-4">
-                @csrf
-                @method('PUT')
+            <a href="{{ route('tareas.index') }}"
+               class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition backdrop-blur-sm
+                      focus-visible:ring-2 focus-visible:ring-white">
 
-                <!-- Título -->
-                <div>
-                    <label for="titulo" class="block text-sm font-medium text-gray-700 mb-1">Título</label>
-                    <input type="text" name="titulo" id="titulo" value="{{ old('titulo', $tarea->titulo) }}" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white">
-                    @error('titulo')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <span class="material-symbols-outlined" aria-hidden="true" focusable="false">arrow_back</span>
 
-                <!-- Descripción -->
-                <div>
-                    <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                    <textarea name="descripcion" id="descripcion" rows="3" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white">{{ old('descripcion', $tarea->descripcion) }}</textarea>
-                    @error('descripcion')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                Volver a Tareas
+            </a>
 
-                <!-- Categoría -->
+        </div>
+
+    </div>
+
+    {{-- Tarjeta del formulario --}}
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+
+        {{-- Cabecera --}}
+        <div class="bg-gray-50 border-b border-gray-200 px-6 py-4">
+            <h2 class="text-lg font-semibold text-gray-800">
+                Editar Tarea
+            </h2>
+
+            <p class="text-sm text-gray-500 mt-1">
+                Actualiza la información de la tarea <strong>{{ $tarea->titulo }}</strong>.
+            </p>
+        </div>
+
+        <form action="{{ route('tareas.update', $tarea->id) }}" method="POST" class="p-6 space-y-6">
+            @csrf
+            @method('PUT')
+
+            {{-- Título --}}
+            <div>
+                <label for="titulo" class="block text-sm font-medium text-gray-700 mb-2">
+                    Título <span class="text-red-600" aria-hidden="true">*</span>
+                </label>
+                <input type="text" name="titulo" id="titulo" value="{{ old('titulo', $tarea->titulo) }}" required
+                    aria-invalid="{{ $errors->has('titulo') ? 'true' : 'false' }}"
+                    @if($errors->has('titulo')) aria-describedby="titulo-error" @endif
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                           @error('titulo') border-red-500 @enderror">
+                @error('titulo')
+                    <p id="titulo-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Descripción --}}
+            <div>
+                <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-2">
+                    Descripción <span class="text-red-600" aria-hidden="true">*</span>
+                </label>
+                <textarea name="descripcion" id="descripcion" rows="4" required
+                    aria-invalid="{{ $errors->has('descripcion') ? 'true' : 'false' }}"
+                    @if($errors->has('descripcion')) aria-describedby="descripcion-error" @endif
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                           @error('descripcion') border-red-500 @enderror">{{ old('descripcion', $tarea->descripcion) }}</textarea>
+                @error('descripcion')
+                    <p id="descripcion-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                {{-- Categoría --}}
                 <div>
-                    <label for="categoria_id" class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+                    <label for="categoria_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        Categoría <span class="text-red-600" aria-hidden="true">*</span>
+                    </label>
                     <select name="categoria_id" id="categoria_id" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white">
+                        aria-invalid="{{ $errors->has('categoria_id') ? 'true' : 'false' }}"
+                        @if($errors->has('categoria_id')) aria-describedby="categoria-error" @endif
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                               @error('categoria_id') border-red-500 @enderror">
                         @forelse ($categorias as $categoria)
-                            <option value="{{ $categoria->id }}" class="text-gray-900 bg-white"
+                            <option value="{{ $categoria->id }}"
                                 {{ old('categoria_id', $tarea->categoria_id) == $categoria->id ? 'selected' : '' }}>
                                 {{ $categoria->name }}
                             </option>
@@ -56,42 +111,61 @@
                         @endforelse
                     </select>
                     @error('categoria_id')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p id="categoria-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Usuario -->
+                {{-- Usuario --}}
                 <div>
-                    <label for="usuario_id" class="block text-sm font-medium text-gray-700 mb-1">Usuario Asignado</label>
+                    <label for="usuario_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        Usuario Asignado <span class="text-red-600" aria-hidden="true">*</span>
+                    </label>
                     <select name="usuario_id" id="usuario_id" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white">
+                        aria-invalid="{{ $errors->has('usuario_id') ? 'true' : 'false' }}"
+                        @if($errors->has('usuario_id')) aria-describedby="usuario-error" @endif
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                               @error('usuario_id') border-red-500 @enderror">
                         @forelse ($usuarios as $usuario)
-                            <option value="{{ $usuario->id }}" class="text-gray-900 bg-white"
+                            <option value="{{ $usuario->id }}"
                                 {{ old('usuario_id', $tarea->usuario_id) == $usuario->id ? 'selected' : '' }}>
-                                {{ $usuario->name ?? ($usuario->user_name ?? $usuario->email) }}
+                                {{ $usuario->user_name ?? $usuario->email }}
                             </option>
                         @empty
                             <option value="" disabled>No hay usuarios registrados.</option>
                         @endforelse
                     </select>
                     @error('usuario_id')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p id="usuario-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Botones de Acción -->
-                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                    <a href="{{ route('tareas.index') }}"
-                        class="px-4 py-2 border text-gray-600 rounded-md hover:bg-gray-50">
-                        Cancelar
-                    </a>
+            </div>
 
-                    <button type="submit"
-                        class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700">
-                        Guardar Cambios
-                    </button>
-                </div>
-            </form>
-        </div>
+            <p class="text-xs text-gray-500">
+                <span class="text-red-600" aria-hidden="true">*</span> Campo obligatorio.
+            </p>
+
+            {{-- Botones de Acción --}}
+            <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+
+                <a href="{{ route('tareas.index') }}"
+                   class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition">
+                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">close</span>
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-700 hover:bg-amber-800 text-white font-medium rounded-xl shadow-sm transition">
+                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">save</span>
+                    Guardar Cambios
+                </button>
+
+            </div>
+        </form>
+
     </div>
+
+</div>
+
 @endsection

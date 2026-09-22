@@ -2,40 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tareas;
 use App\Models\Categoria;
+use App\Models\Tarea;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TareasController extends Controller
 {
-    public ?array $extended = null;
-
-    public function __construct()
+    public function index(Request $request): View
     {
-        $this->extended = [
+        $query = Tarea::with(['categoria', 'usuario']);
+
+        // Búsqueda por título o descripción
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('titulo', 'ilike', "%{$buscar}%")
+                    ->orWhere('descripcion', 'ilike', "%{$buscar}%");
+            });
+        }
+
+        // Filtro por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        // Filtro por categoría
+        if ($request->filled('categoria_id')) {
+            $query->where('categoria_id', $request->categoria_id);
+        }
+
+        return view('tareas.index', [
             'titulo' => 'Tareas',
             'descripcion' => 'Gestión de Tareas',
-        ];
+            'model' => $query->orderBy('id', 'desc')->paginate(10)->withQueryString(),
+            'categorias' => Categoria::orderBy('name')->get(),
+            'filtros' => $request->only(['buscar', 'estado', 'categoria_id']),
+        ]);
     }
 
-    public function index()
+    public function create(): View
     {
-        $this->extended['model'] = Tareas::with(['categoria', 'usuario'])
-            ->orderBy('id', 'desc')
-            ->get();
-
-        return view('tareas.index', $this->extended);
-    }
-
-    public function create()
-    {
-        $this->extended['titulo'] = 'Crear Tarea';
-        $this->extended['descripcion'] = 'Formulario para crear una nueva tarea.';
-        $this->extended['categorias'] = Categoria::all();
-        $this->extended['usuarios'] = User::all();
-
-        return view('tareas.create', $this->extended);
+        return view('tareas.create', [
+            'titulo' => 'Crear Tarea',
+            'descripcion' => 'Formulario para crear una nueva tarea.',
+            'categorias' => Categoria::orderBy('name')->get(),
+            'usuarios' => User::orderBy('user_name')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -47,7 +61,7 @@ class TareasController extends Controller
             'usuario_id' => 'required|exists:usuarios,id',
         ]);
 
-        Tareas::create([
+        Tarea::create([
             'categoria_id' => $request->categoria_id,
             'usuario_id' => $request->usuario_id,
             'titulo' => $request->titulo,
@@ -60,29 +74,19 @@ class TareasController extends Controller
             ->with('success', 'Tarea creada correctamente.');
     }
 
-    /**
-     * Mostrar formulario para editar una tarea
-     */
-    public function edit($id)
+    public function edit(Tarea $tarea): View
     {
-        $tarea = Tareas::findOrFail($id);
-
-        $this->extended['titulo'] = 'Editar Tarea';
-        $this->extended['descripcion'] = 'Formulario para modificar la tarea.';
-        $this->extended['tarea'] = $tarea;
-        $this->extended['categorias'] = Categoria::all();
-        $this->extended['usuarios'] = User::all();
-
-        return view('tareas.edit', $this->extended);
+        return view('tareas.edit', [
+            'titulo' => 'Editar Tarea',
+            'descripcion' => 'Formulario para modificar la tarea.',
+            'tarea' => $tarea,
+            'categorias' => Categoria::orderBy('name')->get(),
+            'usuarios' => User::orderBy('user_name')->get(),
+        ]);
     }
 
-    /**
-     * Actualizar una tarea en la base de datos
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, Tarea $tarea)
     {
-        $tarea = Tareas::findOrFail($id);
-
         $request->validate([
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string',
@@ -102,13 +106,8 @@ class TareasController extends Controller
             ->with('success', 'Tarea actualizada correctamente.');
     }
 
-    /**
-     * Actualizar solo el estado de la tarea
-     */
-    public function updateEstado(Request $request, $id)
+    public function updateEstado(Request $request, Tarea $tarea)
     {
-        $tarea = Tareas::findOrFail($id);
-
         $request->validate([
             'estado' => 'required|in:pendiente,en_progreso,completada',
         ]);
@@ -122,12 +121,8 @@ class TareasController extends Controller
             ->with('success', 'Estado de la tarea actualizado correctamente.');
     }
 
-    /**
-     * Eliminar (soft delete) una tarea
-     */
-    public function destroy($id)
+    public function destroy(Tarea $tarea)
     {
-        $tarea = Tareas::findOrFail($id);
         $tarea->delete();
 
         return redirect()
@@ -135,24 +130,22 @@ class TareasController extends Controller
             ->with('success', 'Tarea enviada a la papelera correctamente.');
     }
 
-    /**
-     * Mostrar la papelera de tareas eliminadas
-     */
-    public function trash()
+    public function trash(): View
     {
-        $this->extended['titulo'] = 'Papelera de Tareas';
-        $this->extended['descripcion'] = 'Tareas eliminadas recientemente.';
-        $this->extended['model'] = Tareas::onlyTrashed()->with(['categoria', 'usuario'])->orderBy('deleted_at', 'desc')->get();
-
-        return view('tareas.trash', $this->extended);
+        return view('tareas.trash', [
+            'titulo' => 'Papelera de Tareas',
+            'descripcion' => 'Tareas eliminadas recientemente.',
+            'model' => Tarea::onlyTrashed()
+                ->with(['categoria', 'usuario'])
+                ->orderBy('deleted_at', 'desc')
+                ->paginate(10)
+                ->withQueryString(),
+        ]);
     }
 
-    /**
-     * Restaurar una tarea de la papelera
-     */
     public function restore($id)
     {
-        $tarea = Tareas::onlyTrashed()->findOrFail($id);
+        $tarea = Tarea::onlyTrashed()->findOrFail($id);
         $tarea->restore();
 
         return redirect()
@@ -160,12 +153,9 @@ class TareasController extends Controller
             ->with('success', 'Tarea restaurada correctamente.');
     }
 
-    /**
-     * Eliminar definitivamente una tarea
-     */
     public function forceDelete($id)
     {
-        $tarea = Tareas::onlyTrashed()->findOrFail($id);
+        $tarea = Tarea::onlyTrashed()->findOrFail($id);
         $tarea->forceDelete();
 
         return redirect()

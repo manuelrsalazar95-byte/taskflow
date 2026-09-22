@@ -4,69 +4,79 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class CategoriaController extends Controller
 {
-    public ?array $extended = null;
-
-    public function __construct()
+    public function index(): View
     {
-        $this->extended = [
+        return view('categorias.index', [
             'titulo' => 'Categorías',
             'descripcion' => 'Gestión de Categorías',
-        ];
+            'model' => Categoria::withCount('tareas')->orderBy('id', 'desc')->paginate(10),
+        ]);
     }
 
-    public function index()
+    public function create(): View
     {
-        $this->extended['model'] = Categoria::orderBy('id', 'desc')->get();
-
-        return view('categorias.index', $this->extended);
-    }
-
-    public function create()
-    {
-        $this->extended['titulo'] = 'Crear Categoría';
-        $this->extended['descripcion'] = 'Formulario para crear una nueva categoría.';
-        return view('categorias.create', $this->extended);
+        return view('categorias.create', [
+            'titulo' => 'Crear Categoría',
+            'descripcion' => 'Formulario para crear una nueva categoría.',
+        ]);
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categoria,name',
+        ], [
+            'name.unique' => 'Ya existe una categoría con ese nombre.',
         ]);
 
-        Categoria::create($validatedData);
+        Categoria::create($request->only('name'));
 
         return redirect()->route('categorias.index')->with('success', 'Categoría creada exitosamente.');
     }
 
-    public function destroy(Categoria $categoria)
+    public function edit(Categoria $categoria): View
     {
-        $categoria->delete();
-
-        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada exitosamente.');
-    }
-
-    public function edit(Categoria $categoria)
-    {
-        $this->extended['model'] = $categoria;
-        $this->extended['descripcion'] = 'Editar categoría seleccionada.';
-
-        return view('categorias.edit', $this->extended);
+        return view('categorias.edit', [
+            'titulo' => 'Editar Categoría',
+            'descripcion' => 'Editar categoría seleccionada.',
+            'model' => $categoria,
+        ]);
     }
 
     public function update(Request $request, Categoria $categoria)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('categoria', 'name')->ignore($categoria->id),
+            ],
+        ], [
+            'name.unique' => 'Ya existe una categoría con ese nombre.',
         ]);
 
-        $categoria->update($validatedData);
+        $categoria->update($request->only('name'));
 
         return redirect()->route('categorias.index')->with('success', 'Categoría actualizada exitosamente.');
+    }
+
+    public function destroy(Categoria $categoria)
+    {
+        // Evita dejar tareas "huérfanas" sin categoría
+        if ($categoria->tareas()->exists()) {
+            return redirect()
+                ->route('categorias.index')
+                ->with('error', 'No se puede eliminar la categoría "'.$categoria->name.'" porque tiene tareas asociadas.');
+        }
+
+        $categoria->delete();
+
+        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada exitosamente.');
     }
 }

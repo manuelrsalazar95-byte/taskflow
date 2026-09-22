@@ -10,9 +10,13 @@ class TrustProxies extends Middleware
     /**
      * The trusted proxies for this application.
      *
+     * Dokploy sitúa Traefik/nginx delante de la aplicación. Al confiar en el
+     * proxy, Request::ip() devuelve la IP real del cliente, necesario para que
+     * el límite de intentos de login (throttle) sea por usuario y no global.
+     *
      * @var array<int, string>|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.

@@ -20,12 +20,12 @@ return new class extends Migration
 
             // Relaciones foráneas
             $table->foreign('categoria_id', 'fk_tareas_categoria')
-                  ->references('id')->on('categoria')
-                  ->onDelete('set null');
+                ->references('id')->on('categoria')
+                ->onDelete('set null');
 
             $table->foreign('usuario_id', 'fk_tareas_usuario')
-                  ->references('id')->on('usuarios')
-                  ->onDelete('set null');
+                ->references('id')->on('usuarios')
+                ->onDelete('set null');
         });
     }
 

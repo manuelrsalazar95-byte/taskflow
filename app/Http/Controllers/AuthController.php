@@ -1,33 +1,36 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AuthController extends Controller
-{   
+{
     public function showRegistrationForm(): View
     {
         return view('auth.register');
     }
 
     public function register(Request $request): RedirectResponse
-    {   
+    {
         $validatedData = $request->validate([
             'user_name' => 'required|string|max:255|unique:usuarios,user_name',
+            'email' => 'nullable|email|max:255|unique:usuarios,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
-       
+
         $user = User::create([
             'user_name' => $validatedData['user_name'],
+            'email' => $validatedData['email'] ?? null,
             'password' => $validatedData['password'],
         ]);
 
         Auth::login($user);
-        //Ayuda a regenerar la sesión para evitar ataques de fijación de sesión
+        // Ayuda a regenerar la sesión para evitar ataques de fijación de sesión
         $request->session()->regenerate();
 
         return redirect()->route('dashboard');
@@ -45,9 +48,11 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        $remember = $request->boolean('remember');
+
+        if (! Auth::attempt($credentials, $remember)) {
             return back()->withErrors([
-                'user_name' => 'Usuario y contraseña incorrectos.'
+                'user_name' => 'Usuario y contraseña incorrectos.',
             ])->onlyInput('user_name');
 
         }

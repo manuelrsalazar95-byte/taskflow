@@ -3,3 +3,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    /* Indicador de foco visible para navegación con teclado (WCAG 2.4.7) */
+    :focus-visible {
+        outline: 2px solid #1d4ed8;
+        outline-offset: 2px;
+    }
+
+    /* El <main> es el destino del enlace "Saltar al contenido": no muestra anillo al enfocarse */
+    main:focus {
+        outline: none;
+    }
+
+    /* Respeta la preferencia de movimiento reducido (WCAG 2.3.3) */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    /* Desplazamiento con teclado sin que la barra fija tape el elemento enfocado (WCAG 2.4.11) */
+    :target {
+        scroll-margin-top: 80px;
+    }
+}
+
+/*
+ * Foco visible incluso cuando un componente (p. ej. la paginación por defecto de
+ * Laravel) aplica "outline-none" con un anillo de bajo contraste.
+ * La especificidad de esta regla gana a la utilidad .focus\:outline-none.
+ */
+nav[role="navigation"] a:focus-visible,
+nav[role="navigation"] button:focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
