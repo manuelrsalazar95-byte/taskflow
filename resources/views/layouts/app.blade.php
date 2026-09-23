@@ -10,7 +10,8 @@
 
         <div class="content p-4 md:p-8">
             @include('partials.flash')
-            @yield('content')
+            
+            @yield('content') 
         </div>
     </main>
 </div>
