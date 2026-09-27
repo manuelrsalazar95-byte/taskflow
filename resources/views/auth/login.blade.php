@@ -104,12 +104,13 @@
 
         {{-- RECORDARME --}}
         <div class="flex items-center justify-between text-sm pt-1">
-            <label for="remember" class="flex items-center gap-2 cursor-pointer">
+            {{-- p-2 -m-2 amplía el área táctil sin cambiar el diseño (WCAG 2.2: target ≥24px) --}}
+            <label for="remember" class="flex items-center gap-2 cursor-pointer p-2 -m-2">
                 <input type="checkbox"
                        id="remember"
                        name="remember"
                        value="1"
-                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                       class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                 <span class="text-gray-600 select-none">Recordarme</span>
             </label>
         </div>

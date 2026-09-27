@@ -7,13 +7,13 @@
 <div class="w-full">
 
     {{-- ENCABEZADO --}}
-    <div class="text-center mb-8">
+    <div class="text-center mb-6 sm:mb-8">
 
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-green-100 flex items-center justify-center mb-4" aria-hidden="true">
+        <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-green-100 flex items-center justify-center mb-4" aria-hidden="true">
             <span class="material-symbols-outlined text-3xl text-green-700" aria-hidden="true" focusable="false">person_add</span>
         </div>
 
-        <h1 class="text-3xl font-bold text-gray-800">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
             Crear Cuenta
         </h1>
 
@@ -45,7 +45,7 @@
     @endif
 
     {{-- FORMULARIO --}}
-    <form method="POST" action="{{ route('register') }}" class="space-y-5">
+    <form method="POST" action="{{ route('register') }}" class="space-y-4 sm:space-y-5">
 
         @csrf
 

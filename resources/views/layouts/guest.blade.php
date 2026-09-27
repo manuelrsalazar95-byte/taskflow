@@ -2,7 +2,10 @@
 
 @section('body')
 
-<div class="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-slate-900">
+{{-- min-h-screen (100vh) se sustituye por 100dvh donde el navegador lo soporta:
+     en móvil el 100vh no se redimensiona con el teclado virtual y la tarjeta
+     centrada quedaba cortada. Fallback a 100vh en navegadores antiguos. --}}
+<div class="min-h-screen supports-[min-height:100dvh]:min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 bg-slate-900">
 
     {{-- LADO IZQUIERDO: Branding & Visual Showcase --}}
     <div class="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-slate-950 via-indigo-950 to-blue-950 relative overflow-hidden text-white">
@@ -39,8 +42,10 @@
     </div>
 
     {{-- LADO DERECHO: Formulario (Login / Register) --}}
-    <div id="contenido" tabindex="-1" class="flex items-center justify-center p-6 sm:p-12 bg-slate-50 relative outline-none">
-        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200/80 p-8 sm:p-10">
+    {{-- px-4/py-8 + safe-area: en móvil la tarjeta respiraba poco y en iPhone la
+         barra de gestos se comía el borde inferior de la tarjeta --}}
+    <div id="contenido" tabindex="-1" class="flex items-center justify-center px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:p-12 bg-slate-50 relative outline-none">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200/80 p-6 sm:p-10">
             
             {{-- Mobile Logo Header --}}
             <div class="lg:hidden text-center mb-8">
