@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+#
+# Helper de desarrollo local para TaskFlow.
+#
+# Esta máquina no tiene PostgreSQL ni Docker instalados a nivel de sistema,
+# así que el entorno de desarrollo usa:
+#   - Binarios portables de PostgreSQL en ~/.local/opt/postgresql-16
+#   - La extensión pdo_pgsql extraída de RPM en ~/.local/lib/php-pgsql
+#
+# Puedes sobrescribir las rutas con las variables PHP_PGSQL_HOME, PG_HOME,
+# PG_DATA, PG_SOCKET y PG_PORT. Si algún día instalas PostgreSQL y php-pgsql
+# con dnf, puedes seguir usando `php artisan` directamente y este script
+# seguirá funcionando.
+#
+# Uso:
+#   scripts/dev db:start     Inicia PostgreSQL local (puerto 5433)
+#   scripts/dev db:stop      Detiene PostgreSQL local
+#   scripts/dev db:status    Muestra el estado del servidor
+#   scripts/dev migrate      Ejecuta migraciones pendientes
+#   scripts/dev fresh        Recrea la BD y siembra datos de prueba
+#   scripts/dev serve        Levanta la app en http://127.0.0.1:8000
+#   scripts/dev test         Ejecuta la suite de tests
+#   scripts/dev artisan ...  Ejecuta un comando artisan con pdo_pgsql
+#   scripts/dev php ...      Ejecuta PHP con pdo_pgsql
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+PHP_PGSQL_HOME="${PHP_PGSQL_HOME:-$HOME/.local/lib/php-pgsql}"
+PG_HOME="${PG_HOME:-$HOME/.local/opt/postgresql-16}"
+PG_DATA="${PG_DATA:-$HOME/.local/share/taskflow/postgres}"
+PG_SOCKET="${PG_SOCKET:-$HOME/.local/share/taskflow/socket}"
+PG_PORT="${PG_PORT:-5433}"
+
+export LD_LIBRARY_PATH="$PHP_PGSQL_HOME/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+# Si pdo_pgsql ya está instalada a nivel de sistema, no hace falta cargar
+# la copia del perfil de usuario (evita el aviso "already loaded").
+if ! php -m 2>/dev/null | grep -qx 'pdo_pgsql'; then
+    export PHP_INI_SCAN_DIR="${PHP_INI_SCAN_DIR:-/etc/php.d}:$PHP_PGSQL_HOME/conf"
+fi
+
+require_php_pgsql() {
+    if ! php -m | grep -qx 'pdo_pgsql'; then
+        echo "ERROR: la extensión pdo_pgsql no está disponible." >&2
+        echo "       Revisa $PHP_PGSQL_HOME o instala php-pgsql con dnf." >&2
+        exit 1
+    fi
+}
+
+require_pg_binaries() {
+    if [ ! -x "$PG_HOME/bin/pg_ctl" ]; then
+        echo "ERROR: no se encontraron los binarios de PostgreSQL en $PG_HOME." >&2
+        echo "       Define PG_HOME o instala PostgreSQL con dnf." >&2
+        exit 1
+    fi
+}
+
+db_start() {
+    require_pg_binaries
+    mkdir -p "$PG_DATA" "$PG_SOCKET"
+
+    if "$PG_HOME/bin/pg_ctl" -D "$PG_DATA" status >/dev/null 2>&1; then
+        echo "PostgreSQL ya está iniciado en el puerto $PG_PORT."
+        return
+    fi
+
+    "$PG_HOME/bin/pg_ctl" \
+        -D "$PG_DATA" \
+        -l "$PG_DATA/server.log" \
+        -o "-p $PG_PORT -k $PG_SOCKET -c listen_addresses=127.0.0.1" \
+        start
+}
+
+db_stop() {
+    require_pg_binaries
+    "$PG_HOME/bin/pg_ctl" -D "$PG_DATA" stop
+}
+
+db_status() {
+    require_pg_binaries
+    "$PG_HOME/bin/pg_ctl" -D "$PG_DATA" status
+}
+
+case "${1:-help}" in
+    db:start)
+        db_start
+        ;;
+    db:stop)
+        db_stop
+        ;;
+    db:status)
+        db_status
+        ;;
+    migrate)
+        require_php_pgsql
+        db_start
+        php artisan migrate
+        ;;
+    fresh)
+        require_php_pgsql
+        db_start
+        php artisan migrate:fresh --seed
+        ;;
+    serve)
+        require_php_pgsql
+        db_start
+        php artisan serve --host=127.0.0.1 --port="${PORT:-8000}"
+        ;;
+    test)
+        require_php_pgsql
+        php artisan test
+        ;;
+    artisan)
+        require_php_pgsql
+        shift
+        php artisan "$@"
+        ;;
+    php)
+        require_php_pgsql
+        shift
+        php "$@"
+        ;;
+    help | --help | -h | *)
+        sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'
+        ;;
+esac

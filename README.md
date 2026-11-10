@@ -1,6 +1,6 @@
 # TaskFlow
 
-Aplicación web para la gestión de tareas y proyectos, desarrollada con Laravel 10 y Tailwind CSS.
+Aplicación web para la gestión de tareas y proyectos, desarrollada con Laravel 12 y Tailwind CSS.
 
 ## Características
 
@@ -15,10 +15,11 @@ Aplicación web para la gestión de tareas y proyectos, desarrollada con Laravel
 
 ## Requisitos
 
-- PHP 8.1+
-- PostgreSQL
-- Composer
-- Node.js (para assets con Vite)
+- PHP 8.3+ con las extensiones `pdo_pgsql`, `mbstring`, `openssl`, `xml`, `ctype`, `json`, `fileinfo`, `tokenizer` y `session`
+- PostgreSQL 16+
+- Composer 2
+- Node.js 20.19+ o 22.12+ (Vite 8)
+- Opcional: Docker / Docker Compose
 
 ## Instalación
 
@@ -37,13 +38,16 @@ npm install
 cp .env.example .env
 php artisan key:generate
 
-# Configurar base de datos en .env
+# Configurar la base de datos en .env
 # DB_CONNECTION=pgsql
 # DB_HOST=127.0.0.1
 # DB_PORT=5432
-# DB_DATABASE=wa_laravel
-# DB_USERNAME=postgres
-# DB_PASSWORD=root
+# DB_DATABASE=taskflow
+# DB_USERNAME=taskflow
+# DB_PASSWORD=secret
+
+# Crear la base de datos (con psql o pgAdmin)
+# CREATE DATABASE taskflow OWNER taskflow;
 
 # Ejecutar migraciones
 php artisan migrate
@@ -52,11 +56,31 @@ php artisan migrate
 php artisan db:seed
 
 # Compilar assets
+npm install
 npm run dev
 
 # Iniciar servidor
 php artisan serve
 ```
+
+### Entorno local sin Docker
+
+En esta máquina el proyecto usa una instancia portable de PostgreSQL en el
+puerto `5433` y una extensión `pdo_pgsql` instalada en el perfil del usuario.
+El script `scripts/dev` encapsula ambas cosas:
+
+```bash
+scripts/dev db:start     # inicia PostgreSQL local
+scripts/dev fresh        # migra desde cero y siembra datos
+scripts/dev serve        # http://127.0.0.1:8000
+scripts/dev test         # suite de tests (SQLite en memoria)
+scripts/dev artisan ...  # cualquier comando artisan
+```
+
+Si prefieres usar PostgreSQL del sistema, instala `postgresql-server` y
+`php-pgsql`, ajusta `.env` y usa `php artisan` directamente. El script
+detecta la extensión y los binarios, y permite sobrescribir las rutas con
+`PHP_PGSQL_HOME`, `PG_HOME`, `PG_DATA` y `PG_PORT`.
 
 ## Estructura del Proyecto
 
@@ -91,10 +115,10 @@ routes/
 
 ## Tecnologías
 
-- **Backend:** Laravel 10, PHP 8.1
-- **Frontend:** Tailwind CSS, Material Symbols
-- **Base de Datos:** PostgreSQL
-- **Build Tool:** Vite
+- **Backend:** Laravel 12, PHP 8.3+
+- **Frontend:** Tailwind CSS 3, Vite 8, Material Symbols
+- **Base de Datos:** PostgreSQL 16 (tests con SQLite en memoria)
+- **Build Tool:** Vite 8
 
 ## Licencia
 

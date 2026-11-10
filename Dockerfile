@@ -16,12 +16,12 @@ FROM node:20-alpine AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
-COPY vite.config.js tailwind.config.js postcss.config.js ./
+COPY vite.config.mjs tailwind.config.js postcss.config.js ./
 COPY resources ./resources
 RUN npm run build
 
 # ---------- Etapa 3: imagen final ----------
-FROM php:8.2-fpm-alpine
+FROM php:8.3-fpm-alpine
 
 # nginx + supervisor + extensiones PHP que necesita Laravel con PostgreSQL
 RUN apk add --no-cache \
@@ -40,6 +40,7 @@ RUN apk add --no-cache \
         pgsql \
         bcmath \
         intl \
+        mbstring \
         zip \
         gd \
         opcache \
