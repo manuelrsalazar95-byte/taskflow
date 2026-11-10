@@ -28,4 +28,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tarea::class, 'usuario_id');
     }
+
+    public function categorias()
+    {
+        return $this->hasMany(Categoria::class, 'user_id');
+    }
 }

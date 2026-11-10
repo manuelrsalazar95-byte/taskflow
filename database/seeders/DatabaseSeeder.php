@@ -13,22 +13,27 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Crear usuario admin por defecto
-        User::create([
+        $admin = User::create([
             'user_name' => 'admin',
             'email' => 'admin@taskflow.com',
             'password' => Hash::make('password'),
         ]);
 
-        // Crear 3 usuarios adicionales
-        User::factory(3)->create();
+        // Admin + 3 usuarios adicionales
+        $usuarios = collect([$admin])->merge(User::factory(3)->create());
 
-        // Crear categorías
-        $categorias = Categoria::factory(8)->create();
+        // Cada usuario tiene sus propias categorías y tareas.
+        foreach ($usuarios as $usuario) {
+            $categorias = Categoria::factory()
+                ->count(3)
+                ->create(['user_id' => $usuario->id]);
 
-        // Crear 15 tareas con relaciones
-        Tarea::factory(15)->create([
-            'categoria_id' => $categorias->random()->id,
-            'usuario_id' => User::inRandomOrder()->first()->id,
-        ]);
+            for ($i = 0; $i < 5; $i++) {
+                Tarea::factory()->create([
+                    'usuario_id' => $usuario->id,
+                    'categoria_id' => $categorias->random()->id,
+                ]);
+            }
+        }
     }
 }

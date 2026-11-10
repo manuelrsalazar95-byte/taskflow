@@ -11,6 +11,7 @@ Aplicación web para la gestión de tareas y proyectos, desarrollada con Laravel
 - **Búsqueda y Filtros** por título, descripción, estado y categoría
 - **Paginación** automática en todas las listas
 - **Soft Deletes** con papelera y restauración de tareas
+- **Datos privados por usuario**: cada cuenta solo ve y gestiona sus propias tareas y categorías
 - **Diseño Responsivo** con interfaz moderna y profesional
 
 ## Requisitos
@@ -95,6 +96,9 @@ app/
 │   ├── Categoria.php
 │   ├── Tarea.php
 │   └── User.php
+├── Policies/
+│   ├── CategoriaPolicy.php       # Solo el propietario gestiona su categoría
+│   └── TareaPolicy.php           # Solo el propietario gestiona su tarea
 resources/views/
 ├── auth/                         # Login y Registro
 ├── categorias/                   # CRUD Categorías

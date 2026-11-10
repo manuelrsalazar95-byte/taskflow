@@ -115,29 +115,17 @@
                     @enderror
                 </div>
 
-                {{-- Usuario --}}
+                {{-- Responsable --}}
                 <div>
-                    <label for="usuario_id" class="block text-sm font-medium text-gray-700 mb-2">
-                        Usuario Asignado <span class="text-red-600" aria-hidden="true">*</span>
-                    </label>
-                    <select name="usuario_id" id="usuario_id" required
-                        aria-invalid="{{ $errors->has('usuario_id') ? 'true' : 'false' }}"
-                        @if($errors->has('usuario_id')) aria-describedby="usuario-error" @endif
-                        class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
-                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
-                               @error('usuario_id') border-red-500 @enderror">
-                        @forelse ($usuarios as $usuario)
-                            <option value="{{ $usuario->id }}"
-                                {{ old('usuario_id', $tarea->usuario_id) == $usuario->id ? 'selected' : '' }}>
-                                {{ $usuario->user_name ?? $usuario->email }}
-                            </option>
-                        @empty
-                            <option value="" disabled>No hay usuarios registrados.</option>
-                        @endforelse
-                    </select>
-                    @error('usuario_id')
-                        <p id="usuario-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                    @enderror
+                    <span class="block text-sm font-medium text-gray-700 mb-2">
+                        Responsable
+                    </span>
+                    <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-700">
+                        {{ auth()->user()->user_name }}
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Las tareas son privadas: solo tú puedes verlas y gestionarlas.
+                    </p>
                 </div>
 
             </div>
