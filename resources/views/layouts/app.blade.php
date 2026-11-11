@@ -1,18 +1,23 @@
 @extends('layouts.base')
+
 @section('body')
-<div class="wrapper">
+<div class="min-h-screen bg-canvas">
+
     @include('partials.sidebar')
 
-    <main id="contenido"
-          tabindex="-1"
-          class="main-panel transition-all duration-300 ease-in-out md:ml-[260px] pt-[67px] min-h-screen">
+    <div class="min-h-screen md:pl-[264px]">
         @include('partials.navbar')
 
-        <div class="content p-4 md:p-8">
-            @include('partials.flash')
-            
-            @yield('content') 
-        </div>
-    </main>
+        <main id="contenido"
+              tabindex="-1"
+              class="pt-16 outline-none">
+            <div class="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+                @include('partials.flash')
+
+                @yield('content')
+            </div>
+        </main>
+    </div>
+
 </div>
 @endsection

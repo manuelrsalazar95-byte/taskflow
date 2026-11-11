@@ -6,110 +6,86 @@
 
 <div class="space-y-6">
 
-    {{-- Encabezado --}}
-    <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-6 rounded-2xl shadow-md">
+    <x-ui.page-header
+        eyebrow="Categorías"
+        :title="$titulo"
+        :subtitle="'Modifica el nombre de «'.$model->name.'».'"
+        icon="edit"
+    >
+        <x-ui.button :href="route('categorias.index')" variant="secondary" size="md">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">arrow_back</span>
+            Volver a categorías
+        </x-ui.button>
+    </x-ui.page-header>
 
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="grid gap-6 lg:grid-cols-3">
 
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-4xl" aria-hidden="true" focusable="false">category</span>
+        <x-ui.card class="lg:col-span-2">
+            <form method="POST" action="{{ route('categorias.update', $model->id) }}" class="space-y-5" data-pending-form>
+                @csrf
+                @method('PUT')
 
-                <div>
-                    <h1 class="text-2xl font-bold">
-                        {{ $titulo }}
-                    </h1>
+                @if ($errors->any())
+                    <div class="mb-5">
+                        <x-ui.error-summary />
+                    </div>
+                @endif
 
-                    <p class="text-blue-50 mt-1">
-                        {{ $descripcion }}
-                    </p>
-                </div>
-            </div>
-
-            <a href="{{ route('categorias.index') }}"
-                class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition backdrop-blur-sm
-                       focus-visible:ring-2 focus-visible:ring-white">
-
-                <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">arrow_back</span>
-
-                Volver a Categorías
-            </a>
-
-        </div>
-
-    </div>
-
-    {{-- Tarjeta del formulario --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-
-        {{-- Cabecera --}}
-        <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
-            <h2 class="text-lg font-semibold text-gray-800">
-                Editar Categoría
-            </h2>
-
-            <p class="text-sm text-gray-500 mt-1">
-                Modifica la información de la categoría seleccionada.
-            </p>
-        </div>
-
-        {{-- Formulario --}}
-        <form method="POST"
-            action="{{ route('categorias.update', $model->id) }}"
-            class="p-6 space-y-6">
-
-            @csrf
-            @method('PUT')
-
-            {{-- Nombre --}}
-            <div>
-                <label for="name"
-                    class="block mb-2 text-sm font-medium text-gray-700">
-                    Nombre de la categoría <span class="text-red-600" aria-hidden="true">*</span>
-                </label>
-
-                <input
-                    id="name"
-                    type="text"
+                <x-ui.input
                     name="name"
-                    value="{{ old('name', $model->name) }}"
-                    required
-                    placeholder="Ingrese el nombre de la categoría"
-                    aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}"
-                    @if($errors->has('name')) aria-describedby="name-error" @endif
-                    class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-700 placeholder:text-gray-500
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                           transition @error('name') border-red-500 @enderror">
+                    label="Nombre de la categoría"
+                    :value="$model->name"
+                    :required="true"
+                    hint="El nuevo nombre se aplicará a todas las tareas de esta categoría."
+                    autofocus
+                />
 
-                @error('name')
-                    <p id="name-error" role="alert" class="mt-2 text-sm text-red-600">
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
+                <div class="flex flex-col-reverse gap-2 border-t border-line pt-5 sm:flex-row sm:justify-end">
+                    <x-ui.button :href="route('categorias.index')" variant="ghost" size="lg">
+                        Cancelar
+                    </x-ui.button>
 
-            {{-- Botones --}}
-            <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+                    <x-ui.button type="submit" variant="primary" size="lg">
+                        <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">save</span>
+                        Guardar cambios
+                    </x-ui.button>
+                </div>
+            </form>
+        </x-ui.card>
 
-                <a href="{{ route('categorias.index') }}"
-                    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition">
+        <aside class="space-y-6">
+            <x-ui.card>
+                <h2 class="text-sm font-semibold text-ink">Detalles</h2>
 
-                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">close</span>
+                <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="text-muted">Tareas asociadas</dt>
+                        <dd class="font-medium text-ink tabular-nums">{{ $model->tareas()->withTrashed()->count() }}</dd>
+                    </div>
 
-                    Cancelar
-                </a>
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="text-muted">Creada</dt>
+                        <dd class="text-right text-ink">
+                            <time datetime="{{ $model->created_at?->toIso8601String() }}">
+                                {{ $model->created_at?->format('d/m/Y') }}
+                            </time>
+                        </dd>
+                    </div>
+                </dl>
+            </x-ui.card>
 
-                <button
-                    type="submit"
-                    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-green-700 hover:bg-green-800 text-white font-medium rounded-xl shadow-sm transition">
-
-                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">save</span>
-
-                    Actualizar Categoría
-                </button>
-
-            </div>
-
-        </form>
+            <x-ui.card>
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-[20px] text-muted" aria-hidden="true" focusable="false">tips_and_updates</span>
+                    <div>
+                        <p class="text-sm font-semibold text-ink">Antes de renombrar</p>
+                        <p class="mt-1 text-xs leading-relaxed text-muted">
+                            Si la categoría todavía tiene tareas asociadas, no podrás eliminarla. Primero muévelas o archívalas.
+                        </p>
+                    </div>
+                </div>
+            </x-ui.card>
+        </aside>
 
     </div>
 

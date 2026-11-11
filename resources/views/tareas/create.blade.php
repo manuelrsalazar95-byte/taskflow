@@ -6,155 +6,129 @@
 
 <div class="space-y-6">
 
-    {{-- Encabezado --}}
-    <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-6 rounded-2xl shadow-md">
+    <x-ui.page-header
+        eyebrow="Tareas"
+        :title="$titulo"
+        :subtitle="$descripcion"
+        icon="add_task"
+    >
+        <x-ui.button :href="route('tareas.index')" variant="secondary" size="md">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">arrow_back</span>
+            Volver a tareas
+        </x-ui.button>
+    </x-ui.page-header>
 
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="grid gap-6 lg:grid-cols-3">
 
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-4xl" aria-hidden="true" focusable="false">task_alt</span>
+        <x-ui.card class="lg:col-span-2">
+            <form action="{{ route('tareas.store') }}" method="POST" class="space-y-5" data-pending-form>
+                @csrf
 
-                <div>
-                    <h1 class="text-2xl font-bold">
-                        {{ $titulo }}
-                    </h1>
+                @if ($errors->any())
+                    <div class="mb-5">
+                        <x-ui.error-summary />
+                    </div>
+                @endif
 
-                    <p class="text-blue-50 mt-1">
-                        {{ $descripcion }}
-                    </p>
-                </div>
-            </div>
+                <x-ui.input
+                    name="titulo"
+                    label="Título"
+                    :value="old('titulo')"
+                    placeholder="Ej. Preparar el informe mensual"
+                    :required="true"
+                    autofocus
+                />
 
-            <a href="{{ route('tareas.index') }}"
-               class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition
-                      focus-visible:ring-2 focus-visible:ring-white">
+                <x-ui.textarea
+                    name="descripcion"
+                    label="Descripción"
+                    placeholder="Describe qué hay que hacer y cualquier detalle útil."
+                    :required="true"
+                    :rows="5"
+                />
 
-                <span class="material-symbols-outlined" aria-hidden="true" focusable="false">arrow_back</span>
-
-                Volver a Tareas
-            </a>
-
-        </div>
-
-    </div>
-
-    {{-- Formulario --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-
-        {{-- Cabecera --}}
-        <div class="bg-gray-50 border-b border-gray-200 px-6 py-4">
-            <h2 class="text-lg font-semibold text-gray-800">
-                Nueva Tarea
-            </h2>
-
-            <p class="text-sm text-gray-500 mt-1">
-                Registra una nueva tarea y asígnala a una categoría y a un responsable.
-            </p>
-        </div>
-
-        <form action="{{ route('tareas.store') }}" method="POST" class="p-6 space-y-6">
-            @csrf
-
-            {{-- Título --}}
-            <div>
-                <label for="titulo" class="block text-sm font-medium text-gray-700 mb-2">
-                    Título <span class="text-red-600" aria-hidden="true">*</span>
-                </label>
-                <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" required
-                    placeholder="Ej. Crear módulo de tareas"
-                    aria-invalid="{{ $errors->has('titulo') ? 'true' : 'false' }}"
-                    @if($errors->has('titulo')) aria-describedby="titulo-error" @endif
-                    class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder:text-gray-500
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
-                           @error('titulo') border-red-500 @enderror">
-                @error('titulo')
-                    <p id="titulo-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Descripción --}}
-            <div>
-                <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-2">
-                    Descripción <span class="text-red-600" aria-hidden="true">*</span>
-                </label>
-                <textarea name="descripcion" id="descripcion" rows="4" required
-                    placeholder="Escribe la descripción de la tarea"
-                    aria-invalid="{{ $errors->has('descripcion') ? 'true' : 'false' }}"
-                    @if($errors->has('descripcion')) aria-describedby="descripcion-error" @endif
-                    class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder:text-gray-500
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
-                           @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
-                @error('descripcion')
-                    <p id="descripcion-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
-                {{-- Categoría --}}
-                <div>
-                    <label for="categoria_id" class="block text-sm font-medium text-gray-700 mb-2">
-                        Categoría <span class="text-red-600" aria-hidden="true">*</span>
-                    </label>
-                    <select name="categoria_id" id="categoria_id" required
-                        aria-invalid="{{ $errors->has('categoria_id') ? 'true' : 'false' }}"
-                        @if($errors->has('categoria_id')) aria-describedby="categoria-error" @endif
-                        class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
-                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
-                               @error('categoria_id') border-red-500 @enderror">
-                        <option value="" {{ old('categoria_id') ? '' : 'selected' }} disabled>
-                            -- Seleccionar categoría --
-                        </option>
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <x-ui.select name="categoria_id" label="Categoría" :required="true" hint="Organiza la tarea dentro de tu espacio.">
+                        <option value="" @selected(! old('categoria_id')) disabled>— Selecciona una categoría —</option>
                         @forelse ($categorias as $categoria)
-                            <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
+                            <option value="{{ $categoria->id }}" @selected(old('categoria_id') == $categoria->id)>
                                 {{ $categoria->name }}
                             </option>
                         @empty
                             <option value="" disabled>No hay categorías registradas. Crea una primero.</option>
                         @endforelse
-                    </select>
-                    @error('categoria_id')
-                        <p id="categoria-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                    @enderror
+                    </x-ui.select>
+
+                    <div>
+                        <p class="mb-1.5 block text-sm font-medium text-ink">Responsable</p>
+
+                        <div class="flex items-center gap-2.5 rounded-xl border border-line bg-canvas px-3.5 py-2.5 text-sm text-muted">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-50 text-[10px] font-semibold text-brand-700"
+                                  aria-hidden="true">
+                                {{ strtoupper(substr(auth()->user()->user_name ?? 'U', 0, 2)) }}
+                            </span>
+                            {{ auth()->user()->user_name }}
+                        </div>
+
+                        <p class="mt-1.5 text-xs text-muted">
+                            Las tareas son privadas: solo tú puedes verlas y gestionarlas.
+                        </p>
+                    </div>
                 </div>
 
-                {{-- Responsable --}}
-                <div>
-                    <span class="block text-sm font-medium text-gray-700 mb-2">
-                        Responsable
-                    </span>
-                    <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-700">
-                        {{ auth()->user()->user_name }}
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">
-                        Las tareas son privadas: solo tú puedes verlas y gestionarlas.
+                <div class="flex items-start gap-2.5 rounded-xl bg-canvas px-3.5 py-3 text-xs leading-relaxed text-muted">
+                    <span class="material-symbols-outlined mt-0.5 text-[17px]" aria-hidden="true" focusable="false">info</span>
+                    <p>
+                        <span class="text-danger-600" aria-hidden="true">*</span> Campo obligatorio.
+                        La tarea se creará con el estado <strong class="font-semibold text-ink">Pendiente</strong> y podrás cambiarlo desde el listado.
                     </p>
                 </div>
 
-            </div>
+                <div class="flex flex-col-reverse gap-2 border-t border-line pt-5 sm:flex-row sm:justify-end">
+                    <x-ui.button :href="route('tareas.index')" variant="ghost" size="lg">
+                        Cancelar
+                    </x-ui.button>
 
-            <p class="text-xs text-gray-500">
-                <span class="text-red-600" aria-hidden="true">*</span> Campo obligatorio.
-                La tarea se creará con el estado <strong>Pendiente</strong>.
-            </p>
+                    <x-ui.button type="submit" variant="primary" size="lg">
+                        <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">add_circle</span>
+                        Guardar tarea
+                    </x-ui.button>
+                </div>
+            </form>
+        </x-ui.card>
 
-            {{-- Botones --}}
-            <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+        <aside class="space-y-6">
+            <x-ui.card>
+                <h2 class="text-sm font-semibold text-ink">Antes de guardar</h2>
 
-                <a href="{{ route('tareas.index') }}"
-                   class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition">
-                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">close</span>
-                    Cancelar
-                </a>
+                <ul class="mt-4 space-y-3 text-sm text-muted">
+                    <li class="flex items-start gap-2.5">
+                        <span class="material-symbols-outlined mt-0.5 text-[18px] text-brand-600" aria-hidden="true" focusable="false">title</span>
+                        Un título corto y concreto se lee mejor en el listado.
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="material-symbols-outlined mt-0.5 text-[18px] text-brand-600" aria-hidden="true" focusable="false">notes</span>
+                        La descripción guarda el contexto que no cabe en el título.
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="material-symbols-outlined mt-0.5 text-[18px] text-brand-600" aria-hidden="true" focusable="false">folder</span>
+                        Una categoría clara facilita encontrarla después.
+                    </li>
+                </ul>
+            </x-ui.card>
 
-                <button type="submit"
-                    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-green-700 hover:bg-green-800 text-white font-medium rounded-xl shadow-sm transition">
-                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">add_circle</span>
-                    Guardar Tarea
-                </button>
-
-            </div>
-        </form>
+            <x-ui.card class="bg-brand-50/60">
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-[20px] text-brand-700" aria-hidden="true" focusable="false">lock</span>
+                    <div>
+                        <p class="text-sm font-semibold text-ink">Tu espacio privado</p>
+                        <p class="mt-1 text-xs leading-relaxed text-muted">
+                            Nadie más puede ver ni editar esta tarea. Puedes archivarla en la papelera cuando termines.
+                        </p>
+                    </div>
+                </div>
+            </x-ui.card>
+        </aside>
 
     </div>
 

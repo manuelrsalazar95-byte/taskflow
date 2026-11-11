@@ -5,9 +5,21 @@
 @tailwind utilities;
 
 @layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-canvas text-ink antialiased;
+    }
+
+    ::selection {
+        @apply bg-brand-100 text-brand-800;
+    }
+
     /* Indicador de foco visible para navegación con teclado (WCAG 2.4.7) */
     :focus-visible {
-        outline: 2px solid #1d4ed8;
+        outline: 2px solid #2447f9;
         outline-offset: 2px;
     }
 
@@ -30,7 +42,7 @@
 
     /* Desplazamiento con teclado sin que la barra fija tape el elemento enfocado (WCAG 2.4.11) */
     :target {
-        scroll-margin-top: 80px;
+        scroll-margin-top: 88px;
     }
 
     /* Táctil: permite arrastrar/plegar con un toque y desactiva el zoom por
@@ -42,6 +54,41 @@
     }
 }
 
+@layer utilities {
+    /* Barra de desplazamiento discreta en paneles internos */
+    .tf-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #d0d5dd transparent;
+    }
+
+    .tf-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .tf-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #d0d5dd;
+        border-radius: 9999px;
+    }
+}
+
+/* Spinner para el estado pendiente de los formularios */
+@keyframes tf-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tf-spinner {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 9999px;
+    animation: tf-spin 600ms linear infinite;
+}
+
 /*
  * Foco visible incluso cuando un componente (p. ej. la paginación por defecto de
  * Laravel) aplica "outline-none" con un anillo de bajo contraste.
@@ -49,7 +96,7 @@
  */
 nav[role="navigation"] a:focus-visible,
 nav[role="navigation"] button:focus-visible {
-    outline: 2px solid #1d4ed8;
+    outline: 2px solid #2447f9;
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 6px;
 }

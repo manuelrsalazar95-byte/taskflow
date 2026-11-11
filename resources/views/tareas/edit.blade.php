@@ -6,151 +6,135 @@
 
 <div class="space-y-6">
 
-    {{-- Encabezado --}}
-    <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-6 rounded-2xl shadow-md">
+    <x-ui.page-header
+        eyebrow="Tareas"
+        :title="$titulo"
+        :subtitle="'Actualiza la información de «'.$tarea->titulo.'».'"
+        icon="edit"
+    >
+        <x-ui.button :href="route('tareas.index')" variant="secondary" size="md">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">arrow_back</span>
+            Volver a tareas
+        </x-ui.button>
+    </x-ui.page-header>
 
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="grid gap-6 lg:grid-cols-3">
 
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-4xl" aria-hidden="true" focusable="false">edit</span>
+        <x-ui.card class="lg:col-span-2">
+            <form action="{{ route('tareas.update', $tarea->id) }}" method="POST" class="space-y-5" data-pending-form>
+                @csrf
+                @method('PUT')
 
-                <div>
-                    <h1 class="text-2xl font-bold">
-                        {{ $titulo }}
-                    </h1>
+                @if ($errors->any())
+                    <div class="mb-5">
+                        <x-ui.error-summary />
+                    </div>
+                @endif
 
-                    <p class="text-blue-50 mt-1">
-                        {{ $descripcion }}
-                    </p>
-                </div>
-            </div>
+                <x-ui.input
+                    name="titulo"
+                    label="Título"
+                    :value="$tarea->titulo"
+                    :required="true"
+                    autofocus
+                />
 
-            <a href="{{ route('tareas.index') }}"
-               class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition backdrop-blur-sm
-                      focus-visible:ring-2 focus-visible:ring-white">
+                <x-ui.textarea
+                    name="descripcion"
+                    label="Descripción"
+                    :value="$tarea->descripcion"
+                    :required="true"
+                    :rows="5"
+                />
 
-                <span class="material-symbols-outlined" aria-hidden="true" focusable="false">arrow_back</span>
-
-                Volver a Tareas
-            </a>
-
-        </div>
-
-    </div>
-
-    {{-- Tarjeta del formulario --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-
-        {{-- Cabecera --}}
-        <div class="bg-gray-50 border-b border-gray-200 px-6 py-4">
-            <h2 class="text-lg font-semibold text-gray-800">
-                Editar Tarea
-            </h2>
-
-            <p class="text-sm text-gray-500 mt-1">
-                Actualiza la información de la tarea <strong>{{ $tarea->titulo }}</strong>.
-            </p>
-        </div>
-
-        <form action="{{ route('tareas.update', $tarea->id) }}" method="POST" class="p-6 space-y-6">
-            @csrf
-            @method('PUT')
-
-            {{-- Título --}}
-            <div>
-                <label for="titulo" class="block text-sm font-medium text-gray-700 mb-2">
-                    Título <span class="text-red-600" aria-hidden="true">*</span>
-                </label>
-                <input type="text" name="titulo" id="titulo" value="{{ old('titulo', $tarea->titulo) }}" required
-                    aria-invalid="{{ $errors->has('titulo') ? 'true' : 'false' }}"
-                    @if($errors->has('titulo')) aria-describedby="titulo-error" @endif
-                    class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
-                           @error('titulo') border-red-500 @enderror">
-                @error('titulo')
-                    <p id="titulo-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Descripción --}}
-            <div>
-                <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-2">
-                    Descripción <span class="text-red-600" aria-hidden="true">*</span>
-                </label>
-                <textarea name="descripcion" id="descripcion" rows="4" required
-                    aria-invalid="{{ $errors->has('descripcion') ? 'true' : 'false' }}"
-                    @if($errors->has('descripcion')) aria-describedby="descripcion-error" @endif
-                    class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
-                           @error('descripcion') border-red-500 @enderror">{{ old('descripcion', $tarea->descripcion) }}</textarea>
-                @error('descripcion')
-                    <p id="descripcion-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
-                {{-- Categoría --}}
-                <div>
-                    <label for="categoria_id" class="block text-sm font-medium text-gray-700 mb-2">
-                        Categoría <span class="text-red-600" aria-hidden="true">*</span>
-                    </label>
-                    <select name="categoria_id" id="categoria_id" required
-                        aria-invalid="{{ $errors->has('categoria_id') ? 'true' : 'false' }}"
-                        @if($errors->has('categoria_id')) aria-describedby="categoria-error" @endif
-                        class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-900 bg-white
-                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
-                               @error('categoria_id') border-red-500 @enderror">
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <x-ui.select name="categoria_id" label="Categoría" :required="true" hint="Puedes mover la tarea a otra categoría.">
                         @forelse ($categorias as $categoria)
                             <option value="{{ $categoria->id }}"
-                                {{ old('categoria_id', $tarea->categoria_id) == $categoria->id ? 'selected' : '' }}>
+                                @selected(old('categoria_id', $tarea->categoria_id) == $categoria->id)>
                                 {{ $categoria->name }}
                             </option>
                         @empty
                             <option value="" disabled>No hay categorías registradas.</option>
                         @endforelse
-                    </select>
-                    @error('categoria_id')
-                        <p id="categoria-error" role="alert" class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                    @enderror
+                    </x-ui.select>
+
+                    <div>
+                        <p class="mb-1.5 block text-sm font-medium text-ink">Responsable</p>
+
+                        <div class="flex items-center gap-2.5 rounded-xl border border-line bg-canvas px-3.5 py-2.5 text-sm text-muted">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-50 text-[10px] font-semibold text-brand-700"
+                                  aria-hidden="true">
+                                {{ strtoupper(substr(auth()->user()->user_name ?? 'U', 0, 2)) }}
+                            </span>
+                            {{ auth()->user()->user_name }}
+                        </div>
+
+                        <p class="mt-1.5 text-xs text-muted">
+                            El propietario no cambia al editar la tarea.
+                        </p>
+                    </div>
                 </div>
 
-                {{-- Responsable --}}
-                <div>
-                    <span class="block text-sm font-medium text-gray-700 mb-2">
-                        Responsable
-                    </span>
-                    <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-700">
-                        {{ auth()->user()->user_name }}
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">
-                        Las tareas son privadas: solo tú puedes verlas y gestionarlas.
+                <div class="flex items-start gap-2.5 rounded-xl bg-canvas px-3.5 py-3 text-xs leading-relaxed text-muted">
+                    <span class="material-symbols-outlined mt-0.5 text-[17px]" aria-hidden="true" focusable="false">info</span>
+                    <p>
+                        <span class="text-danger-600" aria-hidden="true">*</span> Campo obligatorio.
+                        Para cambiar el estado, usa el selector del listado de tareas.
                     </p>
                 </div>
 
-            </div>
+                <div class="flex flex-col-reverse gap-2 border-t border-line pt-5 sm:flex-row sm:justify-end">
+                    <x-ui.button :href="route('tareas.index')" variant="ghost" size="lg">
+                        Cancelar
+                    </x-ui.button>
 
-            <p class="text-xs text-gray-500">
-                <span class="text-red-600" aria-hidden="true">*</span> Campo obligatorio.
-            </p>
+                    <x-ui.button type="submit" variant="primary" size="lg">
+                        <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">save</span>
+                        Guardar cambios
+                    </x-ui.button>
+                </div>
+            </form>
+        </x-ui.card>
 
-            {{-- Botones de Acción --}}
-            <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+        <aside class="space-y-6">
+            <x-ui.card>
+                <h2 class="text-sm font-semibold text-ink">Detalles</h2>
 
-                <a href="{{ route('tareas.index') }}"
-                   class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition">
-                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">close</span>
-                    Cancelar
-                </a>
+                <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="text-muted">Estado actual</dt>
+                        <dd><x-ui.badge :estado="$tarea->estado" /></dd>
+                    </div>
 
-                <button type="submit"
-                    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-700 hover:bg-amber-800 text-white font-medium rounded-xl shadow-sm transition">
-                    <span class="material-symbols-outlined text-sm" aria-hidden="true" focusable="false">save</span>
-                    Guardar Cambios
-                </button>
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="text-muted">Categoría actual</dt>
+                        <dd class="truncate text-right font-medium text-ink">{{ $tarea->categoria->name ?? 'Sin categoría' }}</dd>
+                    </div>
 
-            </div>
-        </form>
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="text-muted">Creada</dt>
+                        <dd class="text-right text-ink">
+                            <time datetime="{{ $tarea->created_at?->toIso8601String() }}">
+                                {{ $tarea->created_at?->format('d/m/Y') }}
+                            </time>
+                        </dd>
+                    </div>
+                </dl>
+            </x-ui.card>
+
+            <x-ui.card>
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-[20px] text-muted" aria-hidden="true" focusable="false">tips_and_updates</span>
+                    <div>
+                        <p class="text-sm font-semibold text-ink">Un cambio pequeño cada vez</p>
+                        <p class="mt-1 text-xs leading-relaxed text-muted">
+                            Mantén el título y la descripción al día: son lo que verás cuando vuelvas a la lista.
+                        </p>
+                    </div>
+                </div>
+            </x-ui.card>
+        </aside>
 
     </div>
 

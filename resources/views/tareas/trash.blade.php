@@ -6,210 +6,114 @@
 
 <div class="space-y-6">
 
-    {{-- ENCABEZADO --}}
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <x-ui.page-header
+        eyebrow="Sistema"
+        :title="ucfirst($titulo)"
+        :subtitle="$descripcion.' Puedes restaurarlas o eliminarlas definitivamente.'"
+        icon="delete_sweep"
+    >
+        <x-ui.button :href="route('tareas.index')" variant="secondary" size="md">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">arrow_back</span>
+            Volver a tareas
+        </x-ui.button>
+    </x-ui.page-header>
 
-        <div>
-            <div class="flex items-center gap-3">
-
-                <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center" aria-hidden="true">
-                    <span class="material-symbols-outlined text-gray-700" aria-hidden="true" focusable="false">delete_sweep</span>
-                </div>
-
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800">
-                        {{ ucfirst($titulo) }}
-                    </h1>
-
-                    <p class="text-gray-500">
-                        {{ $descripcion }}
-                    </p>
-                </div>
-
+    <x-ui.card :padding="false" class="overflow-hidden">
+        <div class="flex items-center justify-between gap-4 border-b border-line px-5 py-4">
+            <div>
+                <h2 class="text-sm font-semibold text-ink">Tareas en papelera</h2>
+                <p class="mt-0.5 text-xs text-muted">
+                    {{ $model->total() }} {{ $model->total() === 1 ? 'tarea' : 'tareas' }} eliminadas recientemente.
+                </p>
             </div>
         </div>
 
-        {{-- VOLVER --}}
-        <a href="{{ route('tareas.index') }}"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition">
+        @if ($model->isEmpty())
+            <x-ui.empty-state
+                icon="delete_sweep"
+                title="La papelera está vacía"
+                description="No hay tareas eliminadas en este momento. Todo lo que archives aparecerá aquí."
+            >
+                <x-ui.button :href="route('tareas.index')" variant="secondary" size="md">
+                    Volver a mis tareas
+                </x-ui.button>
+            </x-ui.empty-state>
+        @else
+            {{-- Cabecera de columnas (solo escritorio) --}}
+            <div class="hidden grid-cols-[minmax(0,1fr)_160px_220px] gap-3 border-b border-line bg-canvas/60 px-5 py-2.5 lg:grid"
+                 aria-hidden="true">
+                <span class="text-xs font-medium text-muted">Tarea</span>
+                <span class="text-xs font-medium text-muted">Eliminada el</span>
+                <span class="text-right text-xs font-medium text-muted">Acciones</span>
+            </div>
 
-            <span class="material-symbols-outlined text-[20px]" aria-hidden="true" focusable="false">arrow_back</span>
+            <ul class="divide-y divide-line">
+                @foreach ($model as $x)
+                    <li class="grid gap-3 px-4 py-4 transition-colors hover:bg-canvas/60 lg:grid-cols-[minmax(0,1fr)_160px_220px] lg:items-center lg:gap-3 lg:px-5">
 
-            Volver a Tareas
+                        <div class="min-w-0">
+                            <p class="truncate text-sm font-medium text-ink">{{ $x->titulo }}</p>
+                            <p class="mt-0.5 line-clamp-1 text-xs text-muted">{{ Str::limit($x->descripcion, 80) }}</p>
 
-        </a>
-
-    </div>
-
-
-    {{-- TABLA --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
-
-        <div class="px-6 py-4 border-b border-gray-100">
-            <h2 class="font-semibold text-gray-700">
-                Tareas en Papelera
-            </h2>
-        </div>
-
-        <div class="overflow-x-auto pb-4" role="region" aria-label="Tabla de tareas en la papelera" tabindex="0">
-
-            <table class="w-full">
-                <caption class="sr-only">
-                    Tareas eliminadas con su fecha de borrado y las acciones de restauración o eliminación definitiva
-                </caption>
-
-                <thead class="bg-gray-50">
-
-                    <tr>
-
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            ID
-                        </th>
-
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            Título
-                        </th>
-
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            Descripción
-                        </th>
-                        
-                        <th scope="col" class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            Eliminado el
-                        </th>
-
-                        <th scope="col" class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            Acciones
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @forelse ($model as $x)
-
-                        <tr class="hover:bg-gray-50 transition">
-
-                            {{-- ID --}}
-                            <td class="px-6 py-4 border-t">
-
-                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold">
-                                    #{{ $x->id }}
-                                </span>
-
-                            </td>
-
-
-                            {{-- TÍTULO --}}
-                            <td class="px-6 py-4 border-t font-medium text-gray-700">
-                                {{ $x->titulo }}
-                            </td>
-
-
-                            {{-- DESCRIPCIÓN --}}
-                            <td class="px-6 py-4 border-t text-gray-600">
-                                {{ Str::limit($x->descripcion, 50) }}
-                            </td>
-
-                            {{-- ELIMINADO EL --}}
-                            <td class="px-6 py-4 border-t text-center text-sm text-gray-600">
-                                @if($x->deleted_at)
+                            <p class="mt-2 flex items-center gap-1.5 text-[11px] text-muted lg:hidden">
+                                <span class="material-symbols-outlined text-[13px]" aria-hidden="true" focusable="false">schedule</span>
+                                @if ($x->deleted_at)
                                     <time datetime="{{ $x->deleted_at->toIso8601String() }}">
                                         {{ $x->deleted_at->format('d/m/Y H:i') }}
                                     </time>
+                                @else
+                                    Sin fecha
                                 @endif
-                            </td>
+                            </p>
+                        </div>
 
+                        <div class="hidden text-sm text-muted lg:block">
+                            @if ($x->deleted_at)
+                                <time datetime="{{ $x->deleted_at->toIso8601String() }}">
+                                    {{ $x->deleted_at->format('d/m/Y H:i') }}
+                                </time>
+                            @else
+                                —
+                            @endif
+                        </div>
 
-                            {{-- ACCIONES --}}
-                            <td class="px-6 py-4 border-t">
+                        <div class="flex flex-wrap items-center gap-1.5 lg:justify-end">
+                            <form action="{{ route('tareas.restore', $x->id) }}" method="POST" class="inline-flex">
+                                @csrf
+                                @method('PATCH')
 
-                                <div class="flex items-center justify-center gap-3">
+                                <button type="submit"
+                                        aria-label="Restaurar la tarea «{{ $x->titulo }}»"
+                                        class="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-success-700 transition hover:bg-success-50">
+                                    <span class="material-symbols-outlined text-[17px]" aria-hidden="true" focusable="false">restore</span>
+                                    Restaurar
+                                </button>
+                            </form>
 
-                                    {{-- RESTAURAR --}}
-                                    <form action="{{ route('tareas.restore', $x->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button
-                                            type="submit"
-                                            aria-label="Restaurar la tarea «{{ $x->titulo }}»"
-                                            class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-medium">
+                            <form action="{{ route('tareas.forceDelete', $x->id) }}" method="POST" class="inline-flex">
+                                @csrf
+                                @method('DELETE')
 
-                                            <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">restore</span>
+                                <button type="submit"
+                                        data-confirm="¿Eliminar definitivamente la tarea «{{ $x->titulo }}»? Esta acción no se puede deshacer."
+                                        aria-label="Eliminar definitivamente la tarea «{{ $x->titulo }}»"
+                                        class="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-danger-600 transition hover:bg-danger-50">
+                                    <span class="material-symbols-outlined text-[17px]" aria-hidden="true" focusable="false">delete_forever</span>
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
 
-                                            Restaurar
-
-                                        </button>
-                                    </form>
-
-
-                                    {{-- ELIMINAR DEFINITIVAMENTE --}}
-                                    <form action="{{ route('tareas.forceDelete', $x->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button
-                                            type="submit"
-                                            data-confirm="¿Eliminar definitivamente la tarea «{{ $x->titulo }}»? Esta acción no se puede deshacer."
-                                            onclick="return confirm(this.dataset.confirm)"
-                                            class="inline-flex items-center gap-1 text-red-700 hover:text-red-900 font-medium">
-
-                                            <span class="material-symbols-outlined text-[18px]" aria-hidden="true" focusable="false">delete_forever</span>
-
-                                            Eliminar definitivo
-
-                                        </button>
-
-                                    </form>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                    @empty
-
-                        <tr>
-
-                            <td colspan="5" class="py-16 text-center">
-
-                                <div class="flex flex-col items-center gap-3">
-
-                                    <span class="material-symbols-outlined text-6xl text-gray-500" aria-hidden="true" focusable="false">delete_sweep</span>
-
-                                    <p class="text-gray-600 font-medium">
-                                        La papelera está vacía
-                                    </p>
-
-                                    <p class="text-sm text-gray-500">
-                                        No hay tareas eliminadas en este momento.
-                                    </p>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                    @endforelse
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        {{-- PAGINACIÓN --}}
-        @if($model->hasPages())
-            <div class="px-6 py-4 border-t border-gray-100">
-                {{ $model->links() }}
-            </div>
+            @if ($model->hasPages())
+                <div class="border-t border-line px-5 py-4">
+                    {{ $model->links() }}
+                </div>
+            @endif
         @endif
-
-    </div>
+    </x-ui.card>
 
 </div>
 

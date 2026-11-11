@@ -1,115 +1,99 @@
-<div id="sidebar"
-     class="sidebar-panel fixed top-0 bottom-0 left-0
-            w-[260px] z-50
-            bg-white
-            border-r border-gray-200/80
-            flex flex-col
-            -translate-x-full md:translate-x-0
-            transition-transform duration-300 ease-in-out">
+@php
+    $isDashboard = request()->routeIs('dashboard');
+    $isCategorias = request()->routeIs('categorias.*');
+    $isTareas = request()->routeIs('tareas.*') && ! request()->routeIs('tareas.trash');
+    $isTrash = request()->routeIs('tareas.trash');
 
-    {{-- LOGO --}}
-    <div class="flex items-center gap-3 px-6 h-[70px] flex-shrink-0 border-b border-gray-100">
+    $linkBase = 'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-150';
+    $linkActive = 'bg-brand-50 text-brand-700';
+    $linkIdle = 'text-muted hover:bg-canvas hover:text-ink';
 
+    $iconBase = 'material-symbols-outlined text-[20px] transition-colors';
+@endphp
+
+<aside id="sidebar"
+       class="fixed inset-y-0 left-0 z-50 flex w-[264px] -translate-x-full flex-col border-r border-line bg-surface transition-transform duration-300 ease-in-out md:translate-x-0"
+       aria-label="Navegación principal">
+
+    {{-- Marca --}}
+    <div class="flex h-16 flex-shrink-0 items-center gap-3 border-b border-line px-5">
         <a href="{{ route('dashboard') }}"
-           class="flex items-center gap-3 min-w-0"
+           class="flex min-w-0 items-center gap-2.5 rounded-lg"
            aria-label="TaskFlow, ir al dashboard">
+            <span class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white shadow-card"
+                  aria-hidden="true">
+                <span class="material-symbols-outlined text-[20px]" aria-hidden="true" focusable="false">task_alt</span>
+            </span>
 
-            {{-- ICONO LOGO --}}
-            <div class="w-10 h-10 rounded-xl bg-blue-600 flex-shrink-0 flex items-center justify-center shadow-md shadow-blue-500/30"
-                 aria-hidden="true">
-                <span class="material-symbols-outlined text-white text-xl" aria-hidden="true" focusable="false">task_alt</span>
-            </div>
-
-            {{-- NOMBRE --}}
-            <div class="flex items-baseline gap-1.5 min-w-0">
-                <span class="text-[17px] font-bold tracking-tight text-gray-900">TaskFlow</span>
-                <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600" aria-hidden="true">v1.3</span>
-            </div>
-
+            <span class="flex min-w-0 items-baseline gap-1.5">
+                <span class="font-display text-[22px] leading-none tracking-tight text-ink">TaskFlow</span>
+                <span class="rounded bg-canvas px-1.5 py-0.5 text-[10px] font-semibold text-muted ring-1 ring-line" aria-hidden="true">v1.3</span>
+            </span>
         </a>
 
-        {{-- CERRAR (solo móvil) --}}
         <button type="button"
                 id="sidebar-close"
-                class="ml-auto md:hidden w-10 h-10 flex items-center justify-center rounded-lg
-                       text-gray-500 hover:bg-gray-100 transition"
+                class="ml-auto flex h-10 w-10 items-center justify-center rounded-lg text-muted transition hover:bg-canvas hover:text-ink md:hidden"
                 aria-label="Cerrar menú de navegación">
             <span class="material-symbols-outlined text-[22px]" aria-hidden="true" focusable="false">close</span>
         </button>
-
     </div>
 
+    {{-- Navegación --}}
+    <div class="tf-scrollbar flex-1 space-y-7 overflow-y-auto px-3 py-6">
 
+        <nav aria-labelledby="nav-principal-label">
+            <p id="nav-principal-label" class="mb-2 px-3 text-xs font-semibold text-muted">Espacio de trabajo</p>
 
-    {{-- MENU --}}
-    <div class="flex-1 overflow-y-auto py-6 px-4 space-y-6 custom-scrollbar">
-
-        @php
-            $isDashboard = request()->routeIs('dashboard');
-            $isCategorias = request()->routeIs('categorias.*');
-            $isTareas = request()->routeIs('tareas.*') && !request()->routeIs('tareas.trash');
-            $isTrash = request()->routeIs('tareas.trash');
-        @endphp
-
-        {{-- SECCIÓN PRINCIPAL --}}
-        <div>
-            <p id="nav-principal-label" class="px-3 mb-3 text-[11px] font-bold uppercase tracking-wider text-gray-500">
-                Menú Principal
-            </p>
-
-            <nav class="space-y-1" aria-labelledby="nav-principal-label">
-                {{-- DASHBOARD --}}
+            <div class="space-y-1">
                 <a href="{{ route('dashboard') }}"
-                   @if($isDashboard) aria-current="page" @endif
-                   class="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isDashboard ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-gray-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg {{ $isDashboard ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}" aria-hidden="true">
-                        <span class="material-symbols-outlined text-[20px]" aria-hidden="true" focusable="false">dashboard</span>
-                    </span>
+                   @if ($isDashboard) aria-current="page" @endif
+                   class="{{ $linkBase }} {{ $isDashboard ? $linkActive : $linkIdle }}">
+                    <span class="{{ $iconBase }} {{ $isDashboard ? 'text-brand-600' : 'text-muted group-hover:text-ink' }}"
+                          aria-hidden="true" focusable="false">dashboard</span>
                     <span>Dashboard</span>
                 </a>
 
-                {{-- CATEGORÍAS --}}
-                <a href="{{ route('categorias.index') }}"
-                   @if($isCategorias) aria-current="page" @endif
-                   class="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isCategorias ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-gray-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg {{ $isCategorias ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}" aria-hidden="true">
-                        <span class="material-symbols-outlined text-[20px]" aria-hidden="true" focusable="false">folder</span>
-                    </span>
-                    <span>Categorías</span>
-                </a>
-
-                {{-- TAREAS --}}
                 <a href="{{ route('tareas.index') }}"
-                   @if($isTareas) aria-current="page" @endif
-                   class="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isTareas ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-gray-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg {{ $isTareas ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}" aria-hidden="true">
-                        <span class="material-symbols-outlined text-[20px]" aria-hidden="true" focusable="false">task_alt</span>
-                    </span>
+                   @if ($isTareas) aria-current="page" @endif
+                   class="{{ $linkBase }} {{ $isTareas ? $linkActive : $linkIdle }}">
+                    <span class="{{ $iconBase }} {{ $isTareas ? 'text-brand-600' : 'text-muted group-hover:text-ink' }}"
+                          aria-hidden="true" focusable="false">task_alt</span>
                     <span>Tareas</span>
                 </a>
-            </nav>
-        </div>
 
+                <a href="{{ route('categorias.index') }}"
+                   @if ($isCategorias) aria-current="page" @endif
+                   class="{{ $linkBase }} {{ $isCategorias ? $linkActive : $linkIdle }}">
+                    <span class="{{ $iconBase }} {{ $isCategorias ? 'text-brand-600' : 'text-muted group-hover:text-ink' }}"
+                          aria-hidden="true" focusable="false">folder</span>
+                    <span>Categorías</span>
+                </a>
+            </div>
+        </nav>
 
-        {{-- SECCIÓN SISTEMA --}}
-        <div>
-            <p id="nav-sistema-label" class="px-3 mb-3 text-[11px] font-bold uppercase tracking-wider text-gray-500">
-                Sistema
-            </p>
+        <nav aria-labelledby="nav-sistema-label">
+            <p id="nav-sistema-label" class="mb-2 px-3 text-xs font-semibold text-muted">Sistema</p>
 
-            <nav class="space-y-1" aria-labelledby="nav-sistema-label">
-                {{-- PAPELERA --}}
+            <div class="space-y-1">
                 <a href="{{ route('tareas.trash') }}"
-                   @if($isTrash) aria-current="page" @endif
-                   class="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isTrash ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-gray-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg {{ $isTrash ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}" aria-hidden="true">
-                        <span class="material-symbols-outlined text-[20px]" aria-hidden="true" focusable="false">delete_sweep</span>
-                    </span>
+                   @if ($isTrash) aria-current="page" @endif
+                   class="{{ $linkBase }} {{ $isTrash ? $linkActive : $linkIdle }}">
+                    <span class="{{ $iconBase }} {{ $isTrash ? 'text-brand-600' : 'text-muted group-hover:text-ink' }}"
+                          aria-hidden="true" focusable="false">delete_sweep</span>
                     <span>Papelera</span>
                 </a>
-            </nav>
-        </div>
-
+            </div>
+        </nav>
     </div>
 
-</div>
+    {{-- Pie: recordatorio de privacidad --}}
+    <div class="border-t border-line p-3">
+        <div class="flex items-start gap-2.5 rounded-xl bg-canvas px-3 py-3">
+            <span class="material-symbols-outlined mt-0.5 text-[18px] text-muted" aria-hidden="true" focusable="false">lock</span>
+            <p class="text-xs leading-relaxed text-muted">
+                Espacio privado. Solo tú ves tus tareas y categorías.
+            </p>
+        </div>
+    </div>
+</aside>

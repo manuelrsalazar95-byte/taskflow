@@ -2,64 +2,84 @@
 
 @section('body')
 
-{{-- min-h-screen (100vh) se sustituye por 100dvh donde el navegador lo soporta:
-     en móvil el 100vh no se redimensiona con el teclado virtual y la tarjeta
-     centrada quedaba cortada. Fallback a 100vh en navegadores antiguos. --}}
-<div class="min-h-screen supports-[min-height:100dvh]:min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 bg-slate-900">
+<div class="min-h-screen supports-[min-height:100dvh]:min-h-[100dvh] lg:grid lg:grid-cols-[1.05fr_1fr]">
 
-    {{-- LADO IZQUIERDO: Branding & Visual Showcase --}}
-    <div class="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-slate-950 via-indigo-950 to-blue-950 relative overflow-hidden text-white">
-        <!-- Glowing Ambient Orbs -->
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    {{-- Panel editorial: marca y propuesta --}}
+    <aside class="relative hidden overflow-hidden bg-ink p-12 text-white lg:flex lg:flex-col lg:justify-between">
 
-        <!-- Logo / Top -->
+        {{-- Retícula sutil de "escritorio" --}}
+        <div class="pointer-events-none absolute inset-0 opacity-[0.55]"
+             style="background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 48px 48px;"
+             aria-hidden="true"></div>
+
         <div class="relative z-10 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30" aria-hidden="true">
-                <span class="material-symbols-outlined text-white text-2xl" aria-hidden="true" focusable="false">task_alt</span>
-            </div>
-            <span class="text-xl font-bold tracking-tight">TaskFlow</span>
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500" aria-hidden="true">
+                <span class="material-symbols-outlined text-[22px]" aria-hidden="true" focusable="false">task_alt</span>
+            </span>
+            <span class="font-display text-2xl leading-none tracking-tight">TaskFlow</span>
         </div>
 
-        <!-- Center Content -->
-        <div class="relative z-10 max-w-lg space-y-6 my-auto">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold tracking-wide uppercase">
-                <span aria-hidden="true">🚀</span>
-                <span>Productividad al siguiente nivel</span>
+        <div class="relative z-10 my-auto max-w-md">
+            <p class="mb-5 flex items-center gap-3 text-xs font-semibold text-brand-200">
+                <span class="h-px w-8 bg-brand-500" aria-hidden="true"></span>
+                Escritorio personal
+            </p>
+
+            <p class="font-display text-5xl leading-[1.05] tracking-tight text-white">
+                Tus tareas,<br>
+                <span class="italic text-brand-200">en orden.</span>
+            </p>
+
+            <p class="mt-5 max-w-sm text-base leading-relaxed text-white/70">
+                Un espacio privado para capturar lo que importa, moverlo con claridad y cerrar el día con la lista en paz.
+            </p>
+
+            <ul class="mt-10 space-y-4 border-t border-white/10 pt-6 text-sm text-white/70">
+                <li class="flex items-start gap-3">
+                    <span class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-semibold text-brand-200" aria-hidden="true">01</span>
+                    Privado por diseño: solo tú ves tus tareas.
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-semibold text-brand-200" aria-hidden="true">02</span>
+                    Estados claros: pendiente, en progreso y completada.
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-semibold text-brand-200" aria-hidden="true">03</span>
+                    Papelera con retorno: nada se pierde por accidente.
+                </li>
+            </ul>
+        </div>
+
+        <p class="relative z-10 text-xs text-white/60">
+            &copy; {{ date('Y') }} TaskFlow. Todos los derechos reservados.
+        </p>
+    </aside>
+
+    {{-- Formulario --}}
+    <main id="contenido"
+         tabindex="-1"
+         class="flex min-h-screen items-center justify-center bg-canvas px-4 py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] outline-none sm:px-8 lg:min-h-0">
+
+        <div class="w-full max-w-[440px]">
+
+            {{-- Marca en móvil --}}
+            <div class="mb-8 text-center lg:hidden">
+                <span class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-card" aria-hidden="true">
+                    <span class="material-symbols-outlined text-[24px]" aria-hidden="true" focusable="false">task_alt</span>
+                </span>
+                <p class="font-display text-3xl leading-none tracking-tight text-ink">TaskFlow</p>
+                <p class="mt-2 text-sm text-muted">Tus tareas, en orden.</p>
             </div>
-            <h2 class="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-                Organiza, prioriza y logra tus metas sin esfuerzo.
-            </h2>
-            <p class="text-slate-400 text-base leading-relaxed">
-                TaskFlow te permite gestionar proyectos, asignar tareas y dar seguimiento al progreso de tu equipo en tiempo real con una interfaz ultrarrápida y moderna.
+
+            <div class="rounded-2xl border border-line bg-surface p-6 shadow-card sm:p-8">
+                @yield('content')
+            </div>
+
+            <p class="mt-6 text-center text-xs text-muted">
+                Tus datos permanecen en tu espacio privado de TaskFlow.
             </p>
         </div>
-
-        <!-- Footer / Copyright -->
-        <div class="relative z-10 text-xs text-slate-400">
-            &copy; {{ date('Y') }} TaskFlow. Todos los derechos reservados.
-        </div>
-    </div>
-
-    {{-- LADO DERECHO: Formulario (Login / Register) --}}
-    {{-- px-4/py-8 + safe-area: en móvil la tarjeta respiraba poco y en iPhone la
-         barra de gestos se comía el borde inferior de la tarjeta --}}
-    <div id="contenido" tabindex="-1" class="flex items-center justify-center px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:p-12 bg-slate-50 relative outline-none">
-        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200/80 p-6 sm:p-10">
-            
-            {{-- Mobile Logo Header --}}
-            <div class="lg:hidden text-center mb-8">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30" aria-hidden="true">
-                    <span class="material-symbols-outlined text-white text-3xl" aria-hidden="true" focusable="false">task_alt</span>
-                </div>
-                <p class="text-2xl font-bold text-slate-900">TaskFlow</p>
-                <p class="text-slate-500 text-sm mt-1">Gestiona tus tareas de manera simple</p>
-            </div>
-
-            @yield('content')
-
-        </div>
-    </div>
+    </main>
 
 </div>
 
