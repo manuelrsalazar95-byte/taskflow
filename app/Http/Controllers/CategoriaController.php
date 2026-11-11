@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoriaRequest;
+use App\Http\Requests\UpdateCategoriaRequest;
 use App\Models\Categoria;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class CategoriaController extends Controller
@@ -21,7 +21,8 @@ class CategoriaController extends Controller
             'model' => Categoria::where('user_id', $user->id)
                 ->withCount(['tareas' => fn ($query) => $query->where('usuario_id', $user->id)])
                 ->orderBy('id', 'desc')
-                ->paginate(10),
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 
@@ -33,22 +34,10 @@ class CategoriaController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreCategoriaRequest $request): RedirectResponse
     {
         $user = $request->user();
-
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('categoria', 'name')->where(
-                    fn ($query) => $query->where('user_id', $user->id)->whereNull('deleted_at')
-                ),
-            ],
-        ], [
-            'name.unique' => 'Ya existe una categoría con ese nombre.',
-        ]);
+        $validated = $request->validated();
 
         Categoria::create([
             'name' => $validated['name'],
@@ -69,26 +58,13 @@ class CategoriaController extends Controller
         ]);
     }
 
-    public function update(Request $request, Categoria $categoria): RedirectResponse
+    public function update(UpdateCategoriaRequest $request, Categoria $categoria): RedirectResponse
     {
-        $this->authorize('update', $categoria);
+        $validated = $request->validated();
 
-        $user = $request->user();
-
-        $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('categoria', 'name')
-                    ->where(fn ($query) => $query->where('user_id', $user->id)->whereNull('deleted_at'))
-                    ->ignore($categoria->id),
-            ],
-        ], [
-            'name.unique' => 'Ya existe una categoría con ese nombre.',
+        $categoria->update([
+            'name' => $validated['name'],
         ]);
-
-        $categoria->update($request->only('name'));
 
         return redirect()->route('categorias.index')->with('success', 'Categoría actualizada exitosamente.');
     }

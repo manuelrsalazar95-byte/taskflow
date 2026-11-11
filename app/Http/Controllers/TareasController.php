@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTareaRequest;
+use App\Http\Requests\UpdateTareaEstadoRequest;
+use App\Http\Requests\UpdateTareaRequest;
 use App\Models\Categoria;
 use App\Models\Tarea;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class TareasController extends Controller
@@ -58,26 +60,16 @@ class TareasController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreTareaRequest $request): RedirectResponse
     {
         $user = $request->user();
-
-        $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'categoria_id' => [
-                'required',
-                Rule::exists('categoria', 'id')->where(
-                    fn ($query) => $query->where('user_id', $user->id)->whereNull('deleted_at')
-                ),
-            ],
-        ]);
+        $validated = $request->validated();
 
         Tarea::create([
-            'categoria_id' => $request->categoria_id,
+            'categoria_id' => $validated['categoria_id'],
             'usuario_id' => $user->id,
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
+            'titulo' => $validated['titulo'],
+            'descripcion' => $validated['descripcion'],
             'estado' => 'pendiente',
         ]);
 
@@ -98,28 +90,15 @@ class TareasController extends Controller
         ]);
     }
 
-    public function update(Request $request, Tarea $tarea): RedirectResponse
+    public function update(UpdateTareaRequest $request, Tarea $tarea): RedirectResponse
     {
-        $this->authorize('update', $tarea);
-
-        $user = $request->user();
-
-        $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'categoria_id' => [
-                'required',
-                Rule::exists('categoria', 'id')->where(
-                    fn ($query) => $query->where('user_id', $user->id)->whereNull('deleted_at')
-                ),
-            ],
-        ]);
+        $validated = $request->validated();
 
         // El propietario (usuario_id) no se modifica desde el formulario.
         $tarea->update([
-            'categoria_id' => $request->categoria_id,
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
+            'categoria_id' => $validated['categoria_id'],
+            'titulo' => $validated['titulo'],
+            'descripcion' => $validated['descripcion'],
         ]);
 
         return redirect()
@@ -127,16 +106,12 @@ class TareasController extends Controller
             ->with('success', 'Tarea actualizada correctamente.');
     }
 
-    public function updateEstado(Request $request, Tarea $tarea): RedirectResponse
+    public function updateEstado(UpdateTareaEstadoRequest $request, Tarea $tarea): RedirectResponse
     {
-        $this->authorize('update', $tarea);
-
-        $request->validate([
-            'estado' => 'required|in:pendiente,en_progreso,completada',
-        ]);
+        $validated = $request->validated();
 
         $tarea->update([
-            'estado' => $request->estado,
+            'estado' => $validated['estado'],
         ]);
 
         return redirect()

@@ -12,6 +12,7 @@ Aplicación web para la gestión de tareas y proyectos, desarrollada con Laravel
 - **Paginación** automática en todas las listas
 - **Soft Deletes** con papelera y restauración de tareas
 - **Datos privados por usuario**: cada cuenta solo ve y gestiona sus propias tareas y categorías
+- **Validación centralizada** con FormRequests (reglas y mensajes en un solo lugar)
 - **Diseño Responsivo** con interfaz moderna y profesional
 
 ## Requisitos
@@ -87,11 +88,13 @@ detecta la extensión y los binarios, y permite sobrescribir las rutas con
 
 ```
 app/
-├── Http/Controllers/
-│   ├── AuthController.php        # Autenticación
-│   ├── CategoriaController.php   # CRUD Categorías
-│   ├── DashboardController.php   # Dashboard con estadísticas
-│   └── TareasController.php      # CRUD Tareas + Papelera
+├── Http/
+│   ├── Controllers/
+│   │   ├── AuthController.php        # Autenticación
+│   │   ├── CategoriaController.php   # CRUD Categorías
+│   │   ├── DashboardController.php   # Dashboard con estadísticas
+│   │   └── TareasController.php      # CRUD Tareas + Papelera
+│   └── Requests/                     # Validación de formularios
 ├── Models/
 │   ├── Categoria.php
 │   ├── Tarea.php
