@@ -5,7 +5,7 @@
     'icon' => 'task_alt',
 ])
 
-<header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<header class="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
     <div class="flex items-start gap-4">
         <span class="hidden h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700 ring-1 ring-brand-100 sm:flex"
               aria-hidden="true">
@@ -20,7 +20,7 @@
                 </p>
             @endif
 
-            <h1 class="font-display text-3xl leading-tight tracking-tight text-ink sm:text-4xl">
+            <h1 class="font-display text-3xl leading-tight tracking-tight text-ink sm:text-4xl xl:text-[40px] xl:leading-[1.1]">
                 {{ $title }}
             </h1>
 

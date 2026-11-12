@@ -7,6 +7,8 @@ import './bootstrap';
  * (login/registro) no incluye la barra lateral ni el menú de usuario.
  */
 
+const AUTO_SUBMIT_STORAGE_KEY = 'tf:auto-submit-context';
+
 function initSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
@@ -15,7 +17,8 @@ function initSidebar() {
 
     if (!sidebar || !overlay || !btnOpen || !btnClose) return;
 
-    const isMobile = () => window.innerWidth < 768;
+    // El panel fijo aparece a partir de lg (1024 px), igual que en Tailwind.
+    const isMobile = () => window.innerWidth < 1024;
 
     // Fuera de pantalla, el panel no debe recibir foco con Tab.
     function syncSidebarInert() {
@@ -123,6 +126,16 @@ function initAutoSubmit() {
             const form = control.closest('form');
             if (!form) return;
 
+            // Guardar contexto para restaurar scroll y foco tras la recarga.
+            try {
+                sessionStorage.setItem(AUTO_SUBMIT_STORAGE_KEY, JSON.stringify({
+                    id: control.id,
+                    scrollY: window.scrollY,
+                }));
+            } catch (error) {
+                // sessionStorage puede estar bloqueado; el envío sigue funcionando.
+            }
+
             if (typeof form.requestSubmit === 'function') {
                 form.requestSubmit();
             } else {
@@ -130,6 +143,50 @@ function initAutoSubmit() {
             }
         });
     });
+
+    restoreAutoSubmitContext();
+}
+
+function restoreAutoSubmitContext() {
+    let raw = null;
+
+    try {
+        raw = sessionStorage.getItem(AUTO_SUBMIT_STORAGE_KEY);
+        sessionStorage.removeItem(AUTO_SUBMIT_STORAGE_KEY);
+    } catch (error) {
+        return;
+    }
+
+    if (!raw) return;
+
+    let context;
+
+    try {
+        context = JSON.parse(raw);
+    } catch (error) {
+        return;
+    }
+
+    if (!context || typeof context !== 'object') return;
+
+    // Si el envío terminó en errores, el resumen de errores debe llevar el foco
+    // y permanecer visible; no restauramos la posición anterior.
+    if (document.querySelector('[data-error-summary]')) return;
+
+    const target = context.id ? document.getElementById(context.id) : null;
+
+    if (target) {
+        target.focus({ preventScroll: true });
+    }
+
+    if (typeof context.scrollY === 'number') {
+        // Doble frame: espera a que fuentes y layout estén asentados.
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                window.scrollTo(0, context.scrollY);
+            });
+        });
+    }
 }
 
 function initConfirmations() {

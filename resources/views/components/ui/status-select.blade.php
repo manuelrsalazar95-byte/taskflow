@@ -9,7 +9,7 @@
         'completada' => 'border-success-200 bg-success-50 text-success-700',
     ];
 
-    $clases = 'w-full cursor-pointer appearance-none rounded-lg border py-1.5 pl-3 pr-8 text-xs font-semibold transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 lg:w-[140px] '
+    $clases = 'w-full cursor-pointer appearance-none rounded-lg border py-1.5 pl-3 pr-8 text-xs font-semibold transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 lg:w-[130px] '
         .($tonos[$estado] ?? 'border-line bg-surface text-muted');
 @endphp
 

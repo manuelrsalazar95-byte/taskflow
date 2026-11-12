@@ -12,7 +12,7 @@
 @endphp
 
 <aside id="sidebar"
-       class="fixed inset-y-0 left-0 z-50 flex w-[264px] -translate-x-full flex-col border-r border-line bg-surface transition-transform duration-300 ease-in-out md:translate-x-0"
+       class="fixed inset-y-0 left-0 z-50 flex w-[264px] -translate-x-full flex-col border-r border-line bg-surface transition-transform duration-300 ease-in-out lg:translate-x-0"
        aria-label="Navegación principal">
 
     {{-- Marca --}}
@@ -33,7 +33,7 @@
 
         <button type="button"
                 id="sidebar-close"
-                class="ml-auto flex h-10 w-10 items-center justify-center rounded-lg text-muted transition hover:bg-canvas hover:text-ink md:hidden"
+                class="ml-auto flex h-10 w-10 items-center justify-center rounded-lg text-muted transition hover:bg-canvas hover:text-ink lg:hidden"
                 aria-label="Cerrar menú de navegación">
             <span class="material-symbols-outlined text-[22px]" aria-hidden="true" focusable="false">close</span>
         </button>

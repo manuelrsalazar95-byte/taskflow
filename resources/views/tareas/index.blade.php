@@ -4,12 +4,22 @@
 
 @section('content')
 
+@php
+    $pageTitle = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::lower($titulo));
+    $pageDescription = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::lower($descripcion));
+@endphp
+
 <div class="space-y-6">
+
+    {{-- Errores de validación al cambiar el estado desde el listado --}}
+    @if ($errors->any())
+        <x-ui.error-summary />
+    @endif
 
     <x-ui.page-header
         eyebrow="Espacio de trabajo"
-        :title="ucfirst($titulo)"
-        :subtitle="$descripcion.' · Solo tú ves estas tareas.'"
+        :title="$pageTitle"
+        :subtitle="$pageDescription.' · Solo tú ves estas tareas.'"
         icon="task_alt"
     >
         <x-ui.button :href="route('tareas.trash')" variant="secondary" size="md">
@@ -107,7 +117,7 @@
             </x-ui.empty-state>
         @else
             {{-- Cabecera de columnas (solo escritorio) --}}
-            <div class="hidden grid-cols-[minmax(0,1fr)_150px_140px_130px] gap-3 border-b border-line bg-canvas/60 px-5 py-2.5 lg:grid"
+            <div class="hidden grid-cols-[minmax(0,1fr)_130px_130px_180px] gap-3 border-b border-line bg-canvas/60 px-5 py-2.5 lg:grid"
                  aria-hidden="true">
                 <span class="text-xs font-medium text-muted">Tarea</span>
                 <span class="text-xs font-medium text-muted">Categoría</span>
@@ -117,7 +127,7 @@
 
             <ul class="divide-y divide-line">
                 @foreach ($model as $x)
-                    <li class="grid gap-3 px-4 py-4 transition-colors hover:bg-canvas/60 lg:grid-cols-[minmax(0,1fr)_150px_140px_130px] lg:items-center lg:gap-3 lg:px-5">
+                    <li class="grid gap-3 px-4 py-4 transition-colors hover:bg-canvas/60 lg:grid-cols-[minmax(0,1fr)_130px_130px_180px] lg:items-center lg:gap-3 lg:px-5">
 
                         {{-- Tarea --}}
                         <div class="min-w-0">
@@ -145,7 +155,7 @@
                         </div>
 
                         {{-- Acciones --}}
-                        <div class="flex items-center gap-1.5 lg:justify-end">
+                        <div class="flex flex-wrap items-center gap-1.5 lg:justify-end">
                             <a href="{{ route('tareas.edit', $x->id) }}"
                                aria-label="Editar la tarea «{{ $x->titulo }}»"
                                class="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-brand-700 transition hover:bg-brand-50">

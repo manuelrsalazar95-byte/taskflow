@@ -4,12 +4,17 @@
 
 @section('content')
 
+@php
+    $pageTitle = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::lower($titulo));
+    $pageDescription = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::lower($descripcion));
+@endphp
+
 <div class="space-y-6">
 
     <x-ui.page-header
         eyebrow="Tareas"
-        :title="$titulo"
-        :subtitle="$descripcion"
+        :title="$pageTitle"
+        :subtitle="$pageDescription"
         icon="add_task"
     >
         <x-ui.button :href="route('tareas.index')" variant="secondary" size="md">
@@ -18,9 +23,9 @@
         </x-ui.button>
     </x-ui.page-header>
 
-    <div class="grid gap-6 lg:grid-cols-3">
+    <div class="grid gap-6 xl:grid-cols-3">
 
-        <x-ui.card class="lg:col-span-2">
+        <x-ui.card class="xl:col-span-2">
             <form action="{{ route('tareas.store') }}" method="POST" class="space-y-5" data-pending-form>
                 @csrf
 

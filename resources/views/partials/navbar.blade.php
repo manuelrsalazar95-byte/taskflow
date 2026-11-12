@@ -1,4 +1,4 @@
-<header class="fixed left-0 right-0 top-0 z-40 h-16 border-b border-line bg-surface/95 backdrop-blur md:left-[264px]">
+<header class="fixed left-0 right-0 top-0 z-40 h-16 border-b border-line bg-surface/95 backdrop-blur lg:left-[264px]">
     <div class="flex h-full items-center justify-between gap-4 px-4 sm:px-6">
 
         {{-- Izquierda: menú móvil + búsqueda --}}
@@ -9,7 +9,7 @@
                     aria-label="Abrir menú de navegación"
                     aria-controls="sidebar"
                     aria-expanded="false"
-                    class="flex h-10 w-10 items-center justify-center rounded-lg text-muted transition hover:bg-canvas hover:text-ink md:hidden">
+                    class="flex h-10 w-10 items-center justify-center rounded-lg text-muted transition hover:bg-canvas hover:text-ink lg:hidden">
                 <span class="material-symbols-outlined text-[22px]" aria-hidden="true" focusable="false">menu</span>
             </button>
 
@@ -48,9 +48,9 @@
                         {{ strtoupper(substr(Auth::user()->user_name ?? 'U', 0, 2)) }}
                     </span>
 
-                    <span class="hidden text-left lg:block">
-                        <span class="block text-sm font-semibold leading-tight text-ink">{{ Auth::user()->user_name }}</span>
-                        <span class="block text-xs leading-tight text-muted">{{ Auth::user()->email ?? 'Sin email' }}</span>
+                    <span class="hidden min-w-0 text-left lg:block">
+                        <span class="block max-w-[150px] truncate text-sm font-semibold leading-tight text-ink">{{ Auth::user()->user_name }}</span>
+                        <span class="block max-w-[150px] truncate text-xs leading-tight text-muted">{{ Auth::user()->email ?? 'Sin email' }}</span>
                     </span>
 
                     <span class="material-symbols-outlined text-[20px] text-muted" aria-hidden="true" focusable="false">keyboard_arrow_down</span>
@@ -79,5 +79,5 @@
 
 {{-- Fondo del menú móvil --}}
 <div id="sidebar-overlay"
-     class="fixed inset-0 z-40 hidden bg-ink/40 backdrop-blur-[1px] md:hidden"
+     class="fixed inset-0 z-40 hidden bg-ink/40 backdrop-blur-[1px] lg:hidden"
      aria-hidden="true"></div>

@@ -4,12 +4,17 @@
 
 @section('content')
 
+@php
+    $pageTitle = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::lower($titulo));
+    $pageDescription = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::lower($descripcion));
+@endphp
+
 <div class="space-y-6">
 
     <x-ui.page-header
         eyebrow="Sistema"
-        :title="ucfirst($titulo)"
-        :subtitle="$descripcion.' Puedes restaurarlas o eliminarlas definitivamente.'"
+        :title="$pageTitle"
+        :subtitle="$pageDescription.' Puedes restaurarlas o eliminarlas definitivamente.'"
         icon="delete_sweep"
     >
         <x-ui.button :href="route('tareas.index')" variant="secondary" size="md">
@@ -40,7 +45,7 @@
             </x-ui.empty-state>
         @else
             {{-- Cabecera de columnas (solo escritorio) --}}
-            <div class="hidden grid-cols-[minmax(0,1fr)_160px_220px] gap-3 border-b border-line bg-canvas/60 px-5 py-2.5 lg:grid"
+            <div class="hidden grid-cols-[minmax(0,1fr)_150px_230px] gap-3 border-b border-line bg-canvas/60 px-5 py-2.5 lg:grid"
                  aria-hidden="true">
                 <span class="text-xs font-medium text-muted">Tarea</span>
                 <span class="text-xs font-medium text-muted">Eliminada el</span>
@@ -49,7 +54,7 @@
 
             <ul class="divide-y divide-line">
                 @foreach ($model as $x)
-                    <li class="grid gap-3 px-4 py-4 transition-colors hover:bg-canvas/60 lg:grid-cols-[minmax(0,1fr)_160px_220px] lg:items-center lg:gap-3 lg:px-5">
+                    <li class="grid gap-3 px-4 py-4 transition-colors hover:bg-canvas/60 lg:grid-cols-[minmax(0,1fr)_150px_230px] lg:items-center lg:gap-3 lg:px-5">
 
                         <div class="min-w-0">
                             <p class="truncate text-sm font-medium text-ink">{{ $x->titulo }}</p>

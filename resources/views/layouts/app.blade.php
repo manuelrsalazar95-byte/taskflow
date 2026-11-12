@@ -5,7 +5,7 @@
 
     @include('partials.sidebar')
 
-    <div class="min-h-screen md:pl-[264px]">
+    <div class="min-h-screen lg:pl-[264px]">
         @include('partials.navbar')
 
         <main id="contenido"

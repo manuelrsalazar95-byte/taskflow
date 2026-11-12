@@ -4,11 +4,15 @@
 
 @section('content')
 
+@php
+    $pageTitle = \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Str::lower($titulo));
+@endphp
+
 <div class="space-y-6">
 
     <x-ui.page-header
         eyebrow="Tareas"
-        :title="$titulo"
+        :title="$pageTitle"
         :subtitle="'Actualiza la información de «'.$tarea->titulo.'».'"
         icon="edit"
     >
@@ -18,9 +22,9 @@
         </x-ui.button>
     </x-ui.page-header>
 
-    <div class="grid gap-6 lg:grid-cols-3">
+    <div class="grid gap-6 xl:grid-cols-3">
 
-        <x-ui.card class="lg:col-span-2">
+        <x-ui.card class="xl:col-span-2">
             <form action="{{ route('tareas.update', $tarea->id) }}" method="POST" class="space-y-5" data-pending-form>
                 @csrf
                 @method('PUT')
